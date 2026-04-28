@@ -1,0 +1,359 @@
+.verify-page-shell {
+  width: 100%;
+  padding: 42px 16px 40px;
+}
+
+.verify-page .site-header,
+.verify-page .brand-strip {
+  background: var(--bg);
+}
+
+.verify-page .top-logo {
+  height: 56px;
+}
+
+.verify-container {
+  max-width: 1360px;
+  margin: 0 auto;
+}
+
+.verify-public-heading {
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.verify-public-heading h2 {
+  margin: 0;
+  color: #111111;
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.verify-public-heading p {
+  margin: 4px 0 0;
+  color: #4b5563;
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  font-weight: 500;
+}
+
+.verify-main-card {
+  max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 18px;
+}
+
+.verify-main-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.verify-title {
+  font-size: clamp(2rem, 2.6vw, 2.4rem);
+  font-weight: 700;
+  color: #102948;
+  margin: 8px 0 18px;
+}
+
+.verify-card {
+  background: #ffffff;
+  border: 1px solid #d8e1ee;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(14, 40, 78, 0.08);
+  padding: 16px;
+  max-width: 860px;
+  margin: 0 auto 18px;
+}
+
+.verify-record-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  margin: 2px 0 14px;
+}
+
+.verify-record-banner-success {
+  background: #ffffff;
+  color: #0f2f56;
+  border: 1px solid #d7e0ec;
+}
+
+.verify-record-banner-neutral {
+  background: #ffffff;
+  color: #0f2f56;
+  border: 1px solid #d7e0ec;
+}
+
+.verify-record-banner-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 35%, #8ff7b4, #31b36f 60%, #188d50 100%);
+  box-shadow: 0 0 10px rgba(70, 212, 131, 0.55);
+}
+
+.verify-label {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #152f54;
+  margin-bottom: 8px;
+}
+
+.verify-search-shell {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d7dbe2;
+  border-radius: 999px;
+  background: #ffffff;
+  overflow: hidden;
+  min-height: 58px;
+}
+
+.verify-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 0 18px;
+  font-size: 1rem;
+  color: #374151;
+  height: 58px;
+  background-color: #ffffff;
+}
+
+.verify-search-input:focus {
+  background-color: #ffffff;
+}
+
+.verify-search-input:-webkit-autofill,
+.verify-search-input:-webkit-autofill:hover,
+.verify-search-input:-webkit-autofill:focus,
+.verify-search-input:-webkit-autofill:active {
+  -webkit-text-fill-color: #374151;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+  box-shadow: 0 0 0 1000px #ffffff inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.verify-search-icon-btn {
+  width: 44px;
+  height: 44px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 999px;
+  background: #0a7a3e;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.verify-upload-icon-btn {
+  width: 44px;
+  height: 44px;
+  margin-right: 8px;
+  border: 1px solid #9db0cd;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #1f3f75;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.verify-upload-icon-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.verify-search-icon-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.verify-search-icon-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.verify-hidden-upload {
+  display: none;
+}
+
+.verify-upload-file-name {
+  font-size: 0.95rem;
+  color: #2f4668;
+}
+
+.verify-upload-file-row {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.verify-upload-clear-btn {
+  width: 22px;
+  height: 22px;
+  border: 1px solid #b9c8dc;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #1f3f75;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  padding: 0;
+}
+
+.verify-input {
+  width: 100%;
+  border: 1px solid #b9c8dc;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 1rem;
+  color: #1d2530;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.verify-input:focus {
+  border-color: #1f3f75;
+  box-shadow: 0 0 0 3px rgba(31, 63, 117, 0.15);
+}
+
+.verify-help-text {
+  margin: 10px 0 0;
+  font-size: 0.95rem;
+  color: #4d617e;
+}
+
+.verify-help-top {
+  margin-top: 0;
+  margin-bottom: 14px;
+}
+
+.verify-note {
+  margin: 8px 0 14px;
+  color: #2f4668;
+  font-size: 1rem;
+}
+
+.verify-error {
+  margin: 10px 0 0;
+  color: #b22222;
+  font-weight: 600;
+}
+
+.verify-section-title {
+  font-size: clamp(1.05rem, 1.45vw, 1.35rem);
+  font-weight: 700;
+  color: #102948;
+  margin: 0 0 10px;
+}
+
+.verify-subsection-title {
+  font-size: clamp(0.98rem, 1.3vw, 1.12rem);
+  font-weight: 700;
+  color: #102948;
+  margin: 14px 0 10px;
+}
+
+.verify-result-grid p,
+.verify-subresult p {
+  margin: 0 0 8px;
+  color: #1d2530;
+  word-break: break-word;
+}
+
+.verify-result-grid p:last-child,
+.verify-subresult p:last-child {
+  margin-bottom: 0;
+}
+
+.verify-pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.verify-pill-success {
+  background: #dcf3e6;
+  color: #0f6a3b;
+}
+
+.verify-pill-danger {
+  background: #f9dedf;
+  color: #9b1c23;
+}
+
+.verify-button-row {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.verify-button-row .btn {
+  min-width: 210px;
+}
+
+.verify-subresult {
+  margin-top: 14px;
+  background: #f5f8fc;
+  border: 1px solid #dce6f3;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.verify-tx-hash {
+  color: inherit;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+@media (max-width: 640px) {
+  .verify-page .verify-school-name {
+    font-size: 1.25rem;
+  }
+
+  .verify-page-shell {
+    padding-top: 18px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .verify-card {
+    padding: 16px;
+  }
+
+  .verify-search-shell {
+    min-height: 56px;
+  }
+
+  .verify-search-input {
+    height: 56px;
+    font-size: 0.95rem;
+    padding: 0 10px;
+  }
+
+  .verify-button-row .btn {
+    width: 100%;
+    min-width: 0;
+  }
+}

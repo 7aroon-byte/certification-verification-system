@@ -1,0 +1,441 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;800&display=swap');
+
+.ihecvs-homepage {
+  --bg: #eef3f9;
+  --primary-soft: #dbe9ff;
+  --accent: #f3b700;
+  --text: #1d2530;
+  --muted: #4a5565;
+  --showcase-overlay: rgba(15, 28, 48, 0.14);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.ihecvs-homepage * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.ihecvs-homepage .site-header {
+  background: #f3f6fb;
+}
+
+.ihecvs-homepage .top-strip {
+  background: #16507f;
+  color: #ffffff;
+  font-size: 15px;
+  line-height: 1.2;
+  border-bottom: 1px solid #0f3a5d;
+}
+
+.ihecvs-homepage .top-strip-inner {
+  max-width: 1420px;
+  margin: 0 auto;
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.ihecvs-homepage .top-contact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.ihecvs-homepage .top-logo {
+  height: 56px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.ihecvs-homepage .top-contact strong {
+  font-weight: 500;
+}
+
+.ihecvs-homepage .top-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.ihecvs-homepage .top-nav-links a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.ihecvs-homepage .top-nav-links a.active {
+  color: #ffd166;
+}
+
+.ihecvs-homepage .brand-strip {
+  max-width: 1420px;
+  margin: 0 auto;
+  padding: 28px 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.ihecvs-homepage .brand-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.ihecvs-homepage .brand-welcome {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1;
+  color: #111;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+}
+
+.ihecvs-homepage .brand-tagline {
+  font-family: 'Brush Script MT', 'Segoe Script', cursive;
+  font-size: 34px;
+  line-height: 1.05;
+  color: #0e0e0e;
+  text-align: center;
+}
+
+.ihecvs-homepage .showcase {
+  position: relative;
+  min-height: 62vh;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 36px;
+  gap: 14px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.ihecvs-homepage .showcase::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--showcase-overlay);
+  pointer-events: none;
+}
+
+.ihecvs-homepage .showcase-left,
+.ihecvs-homepage .showcase-right {
+  position: relative;
+  z-index: 2;
+}
+
+.ihecvs-homepage .showcase-left {
+  flex: 1.02;
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ihecvs-homepage .showcase-image {
+  width: min(100%, 400px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 20px rgba(0, 0, 0, 0.18));
+}
+
+.ihecvs-homepage .showcase-right {
+  flex: 1;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-family: 'Montserrat', Arial, sans-serif;
+  color: #070707;
+}
+
+.ihecvs-homepage .showcase-abbr {
+  font-size: clamp(46px, 6.5vw, 92px);
+  font-weight: 800;
+  line-height: 0.95;
+  margin-bottom: 10px;
+}
+
+.ihecvs-homepage .showcase-name {
+  font-size: clamp(20px, 2.8vw, 36px);
+  font-weight: 400;
+  line-height: 1.03;
+}
+
+.ihecvs-homepage .showcase-sub {
+  font-size: clamp(17px, 2.2vw, 30px);
+  font-weight: 400;
+  line-height: 1.02;
+}
+
+.ihecvs-homepage .page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+}
+
+.ihecvs-homepage .hero {
+  background: var(--primary-soft);
+  border: 1px solid #c9ddff;
+  border-radius: 8px;
+  padding: 30px 18px;
+  max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  margin-bottom: 44px;
+}
+
+.ihecvs-homepage .hero h1 {
+  font-size: clamp(1.08rem, 1.8vw, 1.95rem);
+  line-height: 1.2;
+  margin-bottom: 0;
+  font-weight: 700;
+  color: #102948;
+  white-space: nowrap;
+}
+
+.ihecvs-homepage .content {
+  padding: 0;
+}
+
+.ihecvs-homepage .content h2 {
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+  letter-spacing: 0.4px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  color: #121926;
+}
+
+.ihecvs-homepage .underline {
+  width: 120px;
+  height: 4px;
+  background: var(--accent);
+  margin-bottom: 26px;
+  border-radius: 3px;
+}
+
+.ihecvs-homepage .content p {
+  color: var(--muted);
+  font-size: 1.08rem;
+  margin-bottom: 28px;
+  max-width: 100%;
+}
+
+.ihecvs-homepage .important-notes {
+  margin-top: 58px;
+}
+
+.ihecvs-homepage .important-notes ul {
+  list-style: none;
+  margin-top: 8px;
+}
+
+.ihecvs-homepage .important-notes li {
+  position: relative;
+  padding-left: 24px;
+  margin-bottom: 18px;
+  color: #1e3a8a;
+  font-size: 1.08rem;
+}
+
+.ihecvs-homepage .important-notes li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--accent);
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+.ihecvs-homepage .bottom-footer {
+  margin-top: 64px;
+  background-color: #b22222;
+  background-image:
+    radial-gradient(circle at 16% 20%, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px),
+    radial-gradient(circle at 60% 36%, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px),
+    radial-gradient(circle at 85% 68%, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px);
+  background-size: 220px 220px;
+  color: #ffffff;
+  position: relative;
+}
+
+.ihecvs-homepage .footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(90, 12, 12, 0.35);
+}
+
+.ihecvs-homepage .footer-bottom-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 20px 16px;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.4;
+}
+
+.ihecvs-homepage .footer-bottom-inner a {
+  color: #f5c400;
+  text-decoration: none;
+}
+
+.ihecvs-homepage .footer-bottom-inner a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .ihecvs-homepage .top-strip-inner,
+  .ihecvs-homepage .brand-strip {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .ihecvs-homepage .top-strip-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .ihecvs-homepage .top-contact {
+    font-size: 13px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .ihecvs-homepage .top-logo {
+    height: 42px;
+  }
+
+  .ihecvs-homepage .top-nav-links {
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .ihecvs-homepage .top-nav-links a {
+    font-size: 13px;
+  }
+
+  .ihecvs-homepage .brand-strip {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    padding-top: 20px;
+    padding-bottom: 14px;
+  }
+
+  .ihecvs-homepage .brand-line {
+    gap: 6px;
+  }
+
+  .ihecvs-homepage .brand-welcome {
+    font-size: 24px;
+  }
+
+  .ihecvs-homepage .brand-tagline {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .ihecvs-homepage .page {
+    padding: 20px 14px 28px;
+  }
+
+  .ihecvs-homepage .content p,
+  .ihecvs-homepage .important-notes li {
+    font-size: 1rem;
+  }
+
+  .ihecvs-homepage .content h2 {
+    font-size: clamp(1.55rem, 7vw, 2.2rem);
+  }
+
+  .ihecvs-homepage .hero {
+    margin-bottom: 42px;
+    padding: 22px 12px;
+  }
+
+  .ihecvs-homepage .hero h1 {
+    font-size: clamp(1.18rem, 5vw, 1.5rem);
+    white-space: normal;
+  }
+}
+
+@media (max-width: 1180px) {
+  .ihecvs-homepage .top-contact {
+    font-size: 14px;
+  }
+
+  .ihecvs-homepage .top-logo {
+    height: 48px;
+  }
+
+  .ihecvs-homepage .top-nav-links {
+    gap: 18px;
+  }
+
+  .ihecvs-homepage .top-nav-links a {
+    font-size: 14px;
+  }
+
+  .ihecvs-homepage .brand-welcome {
+    font-size: 28px;
+  }
+
+  .ihecvs-homepage .brand-tagline {
+    font-size: 30px;
+  }
+
+  .ihecvs-homepage .showcase {
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    padding-top: 24px;
+    min-height: auto;
+  }
+
+  .ihecvs-homepage .showcase-left,
+  .ihecvs-homepage .showcase-right {
+    width: 100%;
+    min-height: auto;
+  }
+
+  .ihecvs-homepage .showcase-left {
+    height: 360px;
+    min-height: 360px;
+  }
+
+  .ihecvs-homepage .showcase-right {
+    align-items: center;
+    text-align: center;
+  }
+
+  .ihecvs-homepage .footer-bottom-inner {
+    font-size: 16px;
+  }
+}
