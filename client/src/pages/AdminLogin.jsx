@@ -1,6 +1,7 @@
 // Commit: Repository re-initialized and pushed successfully
 // Another test commit to trigger Vercel deployment with correct author
 // Commit: Integration test - Vercel and Render backend connection
+// Commit: Integration test - Vercel and Render backend connection
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
