@@ -10,8 +10,6 @@ export default function AdminDashboard(){
   const [password, setPassword] = useState('')
   const [roleToCreate, setRoleToCreate] = useState('student')
 
-  // Load students and certificates, then calculate metrics
-
   // Dashboard metrics
   const [totalStudents, setTotalStudents] = useState(0)
   const [activeStudents, setActiveStudents] = useState(0)
