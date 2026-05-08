@@ -1,8 +1,7 @@
 ﻿import axios from 'axios'
 
 // Use VITE_API_BASE_URL for Vercel integration, fallback to localhost for dev
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://certification-verification-system.onrender.com/api'
 const api = axios.create({
   baseURL: API_BASE,
   headers: { 'Content-Type': 'application/json' },
