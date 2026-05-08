@@ -13,6 +13,7 @@ const studentRoutes = require('./routes/studentRoutes');
 const verifierRoutes = require('./routes/verifierRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const verifyRoutes = require('./routes/verifyRoutes');
+const visitorRoutes = require('./routes/visitorRoutes');
 
 async function reconcilePendingBlockchainCertificates() {
   try {
@@ -280,6 +281,7 @@ app.use('/api/student', studentRoutes);
 app.use('/api/verifier', verifierRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/verify', verifyRoutes);
+app.use('/api/visitor', visitorRoutes);
 
 // --- Check server ---
 app.get("/", (req, res) => {

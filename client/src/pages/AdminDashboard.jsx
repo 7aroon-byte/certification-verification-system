@@ -30,6 +30,7 @@ export default function AdminDashboard(){
     invalidAttempts: 0,
     mostVerifiedCertificate: null,
   })
+  const [totalWebsiteVisitors, setTotalWebsiteVisitors] = useState(0);
 
   function formatActivityDate(value) {
     if (!value) return 'N/A'
@@ -99,7 +100,13 @@ export default function AdminDashboard(){
     boxShadow: '0 8px 24px rgba(15, 23, 42, 0.14)',
   }
 
-  useEffect(() => { loadDashboardMetrics(); }, []);
+  useEffect(() => {
+    loadDashboardMetrics();
+    // Fetch total website visitors
+    api.get('/visitor/count')
+      .then(res => setTotalWebsiteVisitors(res?.data?.total || 0))
+      .catch(() => setTotalWebsiteVisitors(0));
+  }, []);
 
   async function create(){
     try{
@@ -230,6 +237,10 @@ export default function AdminDashboard(){
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginBottom: '0.5rem' }}>
                   <div style={{ fontWeight: 800, color: '#0f172a', fontSize: '1.05rem' }}>Total Website Visitors</div>
                   <i className="bi bi-people-fill" style={{ color: '#0f766e', fontSize: '1.2rem', lineHeight: 1 }}></i>
+                </div>
+                <div style={{ fontSize: '2.25rem', lineHeight: 1.1, fontWeight: 800, color: '#0f766e' }}>{totalWebsiteVisitors}</div>
+                <div style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '0.4rem' }}>
+                  Overall recorded visitors
                 </div>
                 <div style={{ fontSize: '2.25rem', lineHeight: 1.1, fontWeight: 800, color: '#0f766e' }}>{totalVisitors}</div>
                 <div style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '0.4rem' }}>
