@@ -1,7 +1,9 @@
 const mysql = require('mysql2/promise');
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
+require('dotenv').config({
+  path: path.join(__dirname, '..', '.env')
+});
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -13,11 +15,12 @@ const pool = mysql.createPool({
   port: process.env.DB_PORT || 3306,
   connectionLimit: 10,
   queueLimit: 0,
+
   // Enable SSL only in production (Aiven)
   ...(isProduction && {
     ssl: {
-      rejectUnauthorized: true,
-    },
+      rejectUnauthorized: false
+    }
   })
 });
 
