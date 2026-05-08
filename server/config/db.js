@@ -2,13 +2,23 @@ const mysql = require('mysql2/promise');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
+
+const isProduction = process.env.NODE_ENV === 'production';
+
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'sql212.infinityfree.com',
-  user: process.env.DB_USER || 'if0_41754029',
-  password: process.env.DB_PASSWORD || 'Abba2308',
-  database: process.env.DB_NAME || 'if0_41754029_certificate_system',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT || 3306,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
+  // Enable SSL only in production (Aiven)
+  ...(isProduction && {
+    ssl: {
+      rejectUnauthorized: true,
+    },
+  })
 });
 
 module.exports = pool;
