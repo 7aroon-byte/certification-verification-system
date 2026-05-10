@@ -55,7 +55,7 @@ async function generateCertificatePDF(params) {
   const filePath = path.join(certDir, `${certificateId}.pdf`);
 
   // Build verification URL encoded in QR.
-  const origin = baseUrl || process.env.PUBLIC_BASE_URL || 'http://localhost:5000';
+  const origin = baseUrl || process.env.PUBLIC_BASE_URL || 'https://certification-verification-system.onrender.com';
   const verifyUrl = `${origin}/api/verify?code=${encodeURIComponent(verificationCode)}`;
 
   // Create QR code image buffer
