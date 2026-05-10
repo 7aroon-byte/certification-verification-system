@@ -151,6 +151,17 @@ function toBytes32FromHexString(hexStr) {
   return '0x' + normalized;
 }
 
+function serializeBlockchainRecord(record) {
+  if (!record) return null;
+
+  return {
+    issuer: record.issuer ? String(record.issuer) : null,
+    timestamp: record.timestamp !== undefined && record.timestamp !== null ? String(record.timestamp) : null,
+    revoked: Boolean(record.revoked),
+    enrollmentNumber: record.enrollmentNumber ? String(record.enrollmentNumber) : ''
+  };
+}
+
 async function registerOnChain({ pdfHashHex, enrollmentNumber }) {
   try {
     console.log('[Blockchain] Starting registerOnChain...');
@@ -208,7 +219,7 @@ async function verifyOnChain({ pdfHashHex }) {
   const pdfHashBytes32 = toBytes32FromHexString(pdfHashHex);
   const registered = await contract.isRegistered(pdfHashBytes32);
   const record = registered ? await contract.getRecord(pdfHashBytes32) : null;
-  return { registered, record };
+  return { registered, record: serializeBlockchainRecord(record) };
 }
 
 async function revokeOnChain({ pdfHashHex }) {
