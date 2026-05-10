@@ -458,7 +458,7 @@ async function issueCertificate(req, res) {
 
     // Generate PDF with QR code and compute hash
     const { generateCertificatePDF } = require('../services/pdfService');
-    const baseUrl = process.env.PUBLIC_BASE_URL || undefined;
+    const baseUrl = process.env.PUBLIC_VERIFY_BASE_URL || undefined;
     const { filePath, hashHex } = await generateCertificatePDF({
       certificateId: certificate.id,
       studentName: student.name,
@@ -793,7 +793,7 @@ async function backfillIssuedCertificateQRCodes(req, res) {
   const pool = require('../config/db');
   const { generateCertificatePDF } = require('../services/pdfService');
   const { registerOnChain } = require('../services/blockchainService');
-  const baseUrl = process.env.PUBLIC_BASE_URL || undefined;
+  const baseUrl = process.env.PUBLIC_VERIFY_BASE_URL || undefined;
 
   try {
     const [certificates] = await pool.execute(
@@ -958,7 +958,7 @@ async function updateStudent(req, res) {
     try {
       const db = require('../config/db');
       const { generateCertificatePDF } = require('../services/pdfService');
-      const baseUrl = process.env.PUBLIC_BASE_URL || undefined;
+      const baseUrl = process.env.PUBLIC_VERIFY_BASE_URL || undefined;
 
       const [certificateRows] = await db.execute(
         `SELECT id, student_name, enrollment_number, start_date, finished_date,
