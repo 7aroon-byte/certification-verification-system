@@ -23,6 +23,12 @@ export default function VerifyCertificate() {
     setCode(codeFromUrl)
   }, [codeFromUrl])
 
+  useEffect(() => {
+    if (codeFromUrl) {
+      handleVerifyByInput()
+    }
+  }, [codeFromUrl])
+
   async function sha256HexFromFile(file) {
     const arrayBuffer = await file.arrayBuffer()
     const digest = await crypto.subtle.digest('SHA-256', arrayBuffer)

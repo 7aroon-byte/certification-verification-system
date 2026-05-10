@@ -54,9 +54,19 @@ async function generateCertificatePDF(params) {
 
   const filePath = path.join(certDir, `${certificateId}.pdf`);
 
+  const normalizeBaseUrl = (value) =>
+    String(value || '')
+      .trim()
+      .replace(/^['"]+|['"]+$/g, '')
+      .replace(/\/+$/, '');
+
   // Build verification URL encoded in QR.
-  const origin = baseUrl || process.env.PUBLIC_BASE_URL || 'https://certification-verification-system.onrender.com';
-  const verifyUrl = `${origin}/api/verify?code=${encodeURIComponent(verificationCode)}`;
+  const origin = normalizeBaseUrl(
+    baseUrl ||
+    process.env.PUBLIC_VERIFY_BASE_URL ||
+    'https://certification-verification-system.vercel.app'
+  );
+  const verifyUrl = `${origin}/verify?code=${encodeURIComponent(verificationCode)}`;
 
   // Create QR code image buffer
   const qrPngBuffer = await QRCode.toBuffer(verifyUrl, { 
