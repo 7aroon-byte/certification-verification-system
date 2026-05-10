@@ -229,29 +229,21 @@ async function createStudent(req, res) {
     const loginUrl = process.env.PUBLIC_BASE_URL || 'http://localhost:5000';
     const studentLoginUrl = `${loginUrl}/student/login`;
     
-    try {
-      await sendStudentAccountEmail({
-        to: email,
-        name,
-        enrollmentNumber,
-        temporaryPassword,
-        loginUrl: studentLoginUrl
-      });
-      console.log(`✓ Student account created/restored and email sent: ${email}`);
-    } catch (emailError) {
-      console.error('Failed to send account creation email:', emailError.message);
-      // Account created successfully, but email failed - inform admin
-      return res.status(201).json({
-        success: true,
-        message: 'Student account created but email sending failed. Please verify email settings.',
-        data: created,
-        emailError: emailError.message
-      });
-    }
+    // Send account creation email with temporary credentials in background
+    sendStudentAccountEmail({
+      to: email,
+      name,
+      enrollmentNumber,
+      temporaryPassword,
+      loginUrl: studentLoginUrl
+    })
+      .then(() => console.log(`✓ Student account created/restored and email sent: ${email}`))
+      .catch((emailError) => console.error('Failed to send account creation email (background):', emailError?.message || emailError));
 
+    // Respond immediately — email delivery is attempted in background to avoid blocking the API
     res.status(201).json({
       success: true,
-      message: 'Student account created successfully. Account credentials have been sent to the student email address.',
+      message: 'Student account created successfully. Account credentials will be sent to the student email address shortly.',
       data: {
         id: created.id,
         name: created.name,
