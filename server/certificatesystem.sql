@@ -151,7 +151,7 @@ CREATE TABLE `certificates` (
   `date_issued` date NOT NULL,
   `pdf_hash` varchar(256) DEFAULT NULL,
   `blockchain_tx_hash` varchar(100) DEFAULT NULL,
-  `status` enum('issued','revoked') DEFAULT 'issued',
+  `status` varchar(20) NOT NULL DEFAULT 'issued',
   `blockchain_status` varchar(50) DEFAULT 'pending',
   `issuer_wallet` varchar(100) DEFAULT NULL,
   `verification_code` varchar(100) DEFAULT NULL,

@@ -209,6 +209,14 @@ async function ensureSoftDeleteSchema() {
   }
 
   try {
+    await pool.execute("ALTER TABLE certificates MODIFY COLUMN status VARCHAR(20) NOT NULL DEFAULT 'issued'");
+  } catch (error) {
+    if (!String(error.message || '').toLowerCase().includes('duplicate') && !String(error.message || '').toLowerCase().includes('data truncated')) {
+      console.warn('Certificates status schema update skipped:', error.message);
+    }
+  }
+
+  try {
     await pool.execute('ALTER TABLE certificates ADD COLUMN is_deleted TINYINT(1) NOT NULL DEFAULT 0');
   } catch (error) {
     if (!String(error.message || '').toLowerCase().includes('duplicate column')) {

@@ -41,7 +41,10 @@ export default function StudentDashboard() {
   const totalCertificates = certs.length
   const onchainCertificates = certs.filter((cert) => statusInfo(cert).label === 'Onchain').length
   const revokedCertificates = certs.filter((cert) => statusInfo(cert).label === 'Revoked').length
-  const issuedCertificates = certs.filter((cert) => statusInfo(cert).label === 'Issued').length
+  const issuedCertificates = certs.filter((cert) => {
+    const raw = String(cert?.blockchain_status || cert?.status || 'issued').toLowerCase()
+    return raw === 'issued' || raw === 'onchain' || raw === 'verified'
+  }).length
 
   // Profile update removed per request
 

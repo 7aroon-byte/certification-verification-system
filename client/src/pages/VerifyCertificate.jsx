@@ -25,7 +25,9 @@ export default function VerifyCertificate() {
 
   useEffect(() => {
     if (codeFromUrl) {
-      handleVerifyByInput()
+      Promise.resolve(handleVerifyByInput(codeFromUrl)).finally(() => {
+        setCode('')
+      })
     }
   }, [codeFromUrl])
 
@@ -37,8 +39,8 @@ export default function VerifyCertificate() {
       .join('')
   }
 
-  async function handleVerifyByInput() {
-    const verificationInput = String(code || '').trim()
+  async function handleVerifyByInput(inputValue = code) {
+    const verificationInput = String(inputValue || '').trim()
     if (!verificationInput) {
       setState({ loading: false, error: '', verified: false, data: null })
       setNotification({ visible: true, type: 'error', text: 'Please enter Full Name, Student ID, or Verification Code' })

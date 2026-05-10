@@ -82,7 +82,6 @@ export default function AdminDashboard(){
   const totalAttempts = validAttempts + invalidAttempts
   const validRatio = totalAttempts > 0 ? Math.round((validAttempts / totalAttempts) * 100) : 0
   const invalidRatio = totalAttempts > 0 ? (100 - validRatio) : 0
-  const totalVisitors = Number(verificationAnalytics.totalVisitors || 0)
   const currentYear = new Date().getFullYear()
   const certificatesIssuedThisYear = certificates.filter((cert) => {
     const status = String(cert?.status || '').toLowerCase()
@@ -239,10 +238,6 @@ export default function AdminDashboard(){
                   <i className="bi bi-people-fill" style={{ color: '#0f766e', fontSize: '1.2rem', lineHeight: 1 }}></i>
                 </div>
                 <div style={{ fontSize: '2.25rem', lineHeight: 1.1, fontWeight: 800, color: '#0f766e' }}>{totalWebsiteVisitors}</div>
-                <div style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '0.4rem' }}>
-                  Overall recorded visitors
-                </div>
-                <div style={{ fontSize: '2.25rem', lineHeight: 1.1, fontWeight: 800, color: '#0f766e' }}>{totalVisitors}</div>
                 <div style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '0.4rem' }}>
                   Overall recorded visitors
                 </div>
