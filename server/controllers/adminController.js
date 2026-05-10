@@ -199,12 +199,16 @@ async function createStudent(req, res) {
       });
     }
 
+    const deletedByEmail = await userService.findStudentByEmailIncludingDeleted(email);
+    const deletedByEnrollment = await userService.findStudentByEnrollmentNumberIncludingDeleted(enrollmentNumber);
+    const deletedRecord = deletedByEmail?.is_deleted ? deletedByEmail : (deletedByEnrollment?.is_deleted ? deletedByEnrollment : null);
+
     // Generate temporary password
     const temporaryPassword = generateTemporaryPassword(enrollmentNumber);
     const passwordHash = await bcrypt.hash(temporaryPassword, 10);
 
-    // Create student account with isFirstLogin = true
-    const created = await userService.createStudent({
+    // Create or restore student account with isFirstLogin = true
+    const createPayload = {
       name,
       email,
       passwordHash,
@@ -215,7 +219,11 @@ async function createStudent(req, res) {
       positionHeld,
       conduct,
       isFirstLogin: true
-    });
+    };
+
+    const created = deletedRecord
+      ? await userService.restoreStudent(deletedRecord.id, createPayload)
+      : await userService.createStudent(createPayload);
 
     // Send account creation email with temporary credentials
     const loginUrl = process.env.PUBLIC_BASE_URL || 'http://localhost:5000';
@@ -229,7 +237,7 @@ async function createStudent(req, res) {
         temporaryPassword,
         loginUrl: studentLoginUrl
       });
-      console.log(`✓ Student account created and email sent: ${email}`);
+      console.log(`✓ Student account created/restored and email sent: ${email}`);
     } catch (emailError) {
       console.error('Failed to send account creation email:', emailError.message);
       // Account created successfully, but email failed - inform admin

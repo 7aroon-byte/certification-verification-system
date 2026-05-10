@@ -38,6 +38,14 @@ async function findStudentByEmail(email) {
   }
 }
 
+async function findStudentByEmailIncludingDeleted(email) {
+  const [rows] = await pool.execute(
+    'SELECT id, name, email, password_hash as password, enrollment_number, status, is_first_login, COALESCE(is_deleted, 0) AS is_deleted FROM students WHERE email = ?',
+    [email]
+  );
+  return rows && rows.length > 0 ? rows[0] : null;
+}
+
 async function findStudentByEnrollmentNumber(enrollmentNumber) {
   try {
     const [rows] = await pool.execute(
@@ -49,6 +57,14 @@ async function findStudentByEnrollmentNumber(enrollmentNumber) {
     console.error('Error finding student by enrollment number:', err);
     return null;
   }
+}
+
+async function findStudentByEnrollmentNumberIncludingDeleted(enrollmentNumber) {
+  const [rows] = await pool.execute(
+    'SELECT id, name, email, password_hash as password, enrollment_number, status, is_first_login, COALESCE(is_deleted, 0) AS is_deleted FROM students WHERE enrollment_number = ?',
+    [enrollmentNumber]
+  );
+  return rows && rows.length > 0 ? rows[0] : null;
 }
 
 async function createUser({ name, email, passwordHash, role }) {
@@ -149,6 +165,64 @@ async function createStudent({
       throw fallbackError;
     }
   }
+}
+
+async function restoreStudent(id, {
+  name,
+  email,
+  passwordHash,
+  contactNumber = null,
+  enrollmentNumber,
+  enrollmentYear = null,
+  graduationYear = null,
+  positionHeld = null,
+  conduct = null,
+  isFirstLogin = true
+}) {
+  const [result] = await pool.execute(
+    `UPDATE students
+     SET name = ?,
+         email = ?,
+         phone_number = ?,
+         password_hash = ?,
+         enrollment_number = ?,
+         enrollment_year = ?,
+         graduation_year = ?,
+         position_held = ?,
+         conduct = ?,
+         status = 'active',
+         is_first_login = ?,
+         is_deleted = 0,
+         deleted_at = NULL
+     WHERE id = ?`,
+    [
+      name,
+      email,
+      contactNumber,
+      passwordHash,
+      enrollmentNumber,
+      enrollmentYear,
+      graduationYear,
+      positionHeld,
+      conduct,
+      isFirstLogin,
+      id
+    ]
+  );
+
+  return {
+    id,
+    name,
+    email,
+    contactNumber,
+    enrollmentNumber,
+    enrollmentYear,
+    graduationYear,
+    positionHeld,
+    conduct,
+    isFirstLogin,
+    affectedRows: result.affectedRows
+  };
 }
 
 async function getAllUsers() {
@@ -716,9 +790,12 @@ async function updateStudent(id, {
 module.exports = {
   findUserByEmail,
   findStudentByEmail,
+  findStudentByEmailIncludingDeleted,
   findStudentByEnrollmentNumber,
+  findStudentByEnrollmentNumberIncludingDeleted,
   createUser,
   createStudent,
+  restoreStudent,
   getAllUsers,
   getAllStudents,
   getCertificatesByStudentId,
