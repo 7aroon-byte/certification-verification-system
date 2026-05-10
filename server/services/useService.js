@@ -337,9 +337,26 @@ async function findCertificateForPublicVerify(identifier) {
 
 async function getCertificateById(id, executor = pool) {
   const [rows] = await executor.execute(
-    `SELECT id, student_id, enrollment_number, status, is_deleted
-     FROM certificates
-     WHERE id = ?
+    `SELECT c.id,
+            c.student_id,
+            c.enrollment_number,
+            c.student_name,
+            c.start_date,
+            c.finished_date,
+            c.exam_type,
+            c.position_held,
+            c.conduct,
+            c.date_issued,
+            c.verification_code,
+            c.status,
+            c.is_deleted,
+            s.name AS current_student_name,
+            s.enrollment_number AS current_enrollment_number,
+            s.enrollment_year AS current_enrollment_year,
+            s.graduation_year AS current_graduation_year
+     FROM certificates c
+     LEFT JOIN students s ON s.id = c.student_id AND COALESCE(s.is_deleted, 0) = 0
+               WHERE c.id = ?
      LIMIT 1`,
     [id]
   );

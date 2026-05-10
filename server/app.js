@@ -1,4 +1,5 @@
 const express = require("express");
+const fs = require('fs');
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
@@ -223,6 +224,51 @@ async function ensureSoftDeleteSchema() {
   }
 }
 
+async function serveCertificatePdf(req, res, next) {
+  try {
+    const filename = String(req.params.filename || '').trim();
+    const match = filename.match(/^(\d+)\.pdf$/i);
+    if (!match) {
+      return next();
+    }
+
+    const certificateId = Number(match[1]);
+    const certPath = path.join(__dirname, 'public', 'certificates', filename);
+
+    if (fs.existsSync(certPath)) {
+      return res.sendFile(certPath);
+    }
+
+    const userService = require('./services/useService');
+    const certificate = await userService.getCertificateById(certificateId);
+
+    if (!certificate || String(certificate.is_deleted || 0) === '1') {
+      return res.status(404).send('Certificate PDF not found');
+    }
+
+    const { generateCertificatePDF } = require('./services/pdfService');
+    const baseUrl = process.env.PUBLIC_BASE_URL || undefined;
+
+    await generateCertificatePDF({
+      certificateId: certificate.id,
+      studentName: certificate.student_name || certificate.current_student_name || '',
+      enrollmentNumber: certificate.enrollment_number || certificate.current_enrollment_number || '',
+      startDate: certificate.start_date || certificate.current_enrollment_year || '',
+      finishedDate: certificate.finished_date || certificate.current_graduation_year || '',
+      examType: certificate.exam_type || 'SSCE',
+      positionHeld: certificate.position_held || '',
+      conduct: certificate.conduct || '',
+      verificationCode: certificate.verification_code,
+      baseUrl
+    });
+
+    return res.sendFile(certPath);
+  } catch (error) {
+    console.error('Certificate PDF serve error:', error);
+    return res.status(500).send('Failed to load certificate PDF');
+  }
+}
+
 async function ensureVerificationAnalyticsSchema() {
   try {
     await pool.execute(`
@@ -273,6 +319,7 @@ app.use((req, res, next) => {
 });
 
 // Serve public assets like generated certificates
+app.get('/public/certificates/:filename', serveCertificatePdf);
 app.use('/public', express.static(require('path').join(__dirname, 'public')));
 
 // Use modular routes
