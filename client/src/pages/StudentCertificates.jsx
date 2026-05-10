@@ -3,7 +3,7 @@ import api from '../services/api';
 import Navbar from '../components/Navbar';
 import StudentSidebar from '../components/StudentSidebar';
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://certification-verification-system.onrender.com/api';
 const PUBLIC_BASE = API_BASE.replace(/\/api$/, '');
 
 export default function StudentCertificates() {
