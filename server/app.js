@@ -314,6 +314,28 @@ async function ensureVerificationAnalyticsSchema() {
   }
 }
 
+async function ensureSessionsSchema() {
+  try {
+    await pool.execute(`
+      CREATE TABLE IF NOT EXISTS sessions (
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        jti VARCHAR(64) NOT NULL UNIQUE,
+        user_id INT NOT NULL,
+        role VARCHAR(50) NULL,
+        created_at DATETIME NOT NULL,
+        last_activity DATETIME NOT NULL,
+        expires_at DATETIME NULL,
+        revoked TINYINT(1) NOT NULL DEFAULT 0,
+        INDEX idx_sessions_user (user_id),
+        INDEX idx_sessions_jti (jti)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+    console.log('Sessions schema ensured');
+  } catch (error) {
+    console.warn('Sessions schema check skipped:', error.message);
+  }
+}
+
 app.use(cors());
 app.use(express.json());
 
@@ -347,6 +369,7 @@ Promise.allSettled([
   ensureBlockchainStatusSchema(),
   ensureAdminSecuritySchema(),
   ensureDedicatedLogSchemas(),
+  ensureSessionsSchema(),
   ensureSoftDeleteSchema(),
   ensureVerificationAnalyticsSchema(),
 ]).finally(() => {

@@ -120,8 +120,7 @@ async function getAuditLogs({ limit = 200, offset = 0, actionType = null }) {
     params.push(actionType);
   }
 
-  query += ' ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?';
-  params.push(safeLimit, safeOffset);
+  query += ` ORDER BY created_at DESC, id DESC LIMIT ${safeLimit} OFFSET ${safeOffset}`;
 
   const [rows] = await pool.execute(query, params);
 
@@ -144,37 +143,32 @@ function toSafePagination({ limit = 200, offset = 0 }) {
 
 async function getStudentLogs({ limit = 200, offset = 0 }) {
   const { safeLimit, safeOffset } = toSafePagination({ limit, offset });
-  const [rows] = await pool.execute(
-    `SELECT id, email, login, logout
+  // Inline numeric LIMIT/OFFSET to avoid prepared-statement binding issues on some MySQL setups
+  const query = `SELECT id, email, login, logout
      FROM student_log
      ORDER BY COALESCE(logout, login) DESC, id DESC
-     LIMIT ? OFFSET ?`,
-    [safeLimit, safeOffset]
-  );
+     LIMIT ${safeLimit} OFFSET ${safeOffset}`;
+  const [rows] = await pool.execute(query);
   return rows;
 }
 
 async function getAdminLogs({ limit = 200, offset = 0 }) {
   const { safeLimit, safeOffset } = toSafePagination({ limit, offset });
-  const [rows] = await pool.execute(
-    `SELECT id, email, login, logout
+  const query = `SELECT id, email, login, logout
      FROM admin_log
      ORDER BY COALESCE(logout, login) DESC, id DESC
-     LIMIT ? OFFSET ?`,
-    [safeLimit, safeOffset]
-  );
+     LIMIT ${safeLimit} OFFSET ${safeOffset}`;
+  const [rows] = await pool.execute(query);
   return rows;
 }
 
 async function getCertificateLogs({ limit = 200, offset = 0 }) {
   const { safeLimit, safeOffset } = toSafePagination({ limit, offset });
-  const [rows] = await pool.execute(
-    `SELECT id, userid, userrole, email, action, status, created_at
+  const query = `SELECT id, userid, userrole, email, action, status, created_at
      FROM certificate_log
      ORDER BY created_at DESC, id DESC
-     LIMIT ? OFFSET ?`,
-    [safeLimit, safeOffset]
-  );
+     LIMIT ${safeLimit} OFFSET ${safeOffset}`;
+  const [rows] = await pool.execute(query);
   return rows;
 }
 

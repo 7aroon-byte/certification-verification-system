@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const userService = require('../services/useService');
 const { signToken } = require('../utils/jwt');
+const sessionService = require('../services/sessionService');
 const { sendOTPEmail, sendPasswordResetConfirmation } = require('../services/emailService');
 const { validatePassword } = require('../utils/passwordValidator');
 const { logAuditEvent } = require('../services/auditService');
@@ -36,13 +37,19 @@ async function login(req, res) {
     return res.status(401).json({ success: false, message: 'Invalid credentials' });
   }
 
-  const token = signToken({ 
+  const { token, jti, expiresAt } = signToken({ 
     id: student.id, 
     email: student.email, 
     name: student.name, 
     enrollment_number: student.enrollment_number || null,
     role: 'student' 
   });
+
+  try {
+    await sessionService.createSession({ jti, userId: student.id, role: 'student', expiresAt });
+  } catch (err) {
+    console.warn('Failed to create session record for student login:', err.message || err);
+  }
 
   await logAuditEvent({
     actorId: student.id,
@@ -79,6 +86,14 @@ async function logout(req, res) {
       ipAddress: req.ip,
       userAgent: req.get('user-agent') || null,
     });
+
+    try {
+      if (req.user && req.user.jti) {
+        await sessionService.revokeSession(req.user.jti);
+      }
+    } catch (err) {
+      console.warn('Failed to revoke session during logout (student):', err.message || err);
+    }
 
     return res.json({ success: true, message: 'Logged out successfully' });
   } catch (error) {

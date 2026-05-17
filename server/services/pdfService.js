@@ -33,6 +33,8 @@ function toYear(value) {
  * @param {string} params.verificationCode
  * @param {string} [params.baseUrl] - base URL for QR verification page (e.g., https://example.com)
  */
+
+
 async function generateCertificatePDF(params) {
   const {
     certificateId,
@@ -66,11 +68,14 @@ async function generateCertificatePDF(params) {
     process.env.PUBLIC_VERIFY_BASE_URL ||
     'https://certification-verification-system.vercel.app'
   );
+
   const verifyUrl = `${origin}/verify?code=${encodeURIComponent(verificationCode)}`;
 
   // Create QR code image buffer
   const qrPngBuffer = await QRCode.toBuffer(verifyUrl, { 
     type: 'png', 
+
+
     margin: 1, 
     width: 200,
     color: {
@@ -80,6 +85,8 @@ async function generateCertificatePDF(params) {
   });
 
   // Canonical testimonial layout (always used for issued certificates)
+
+  
   const doc = new PDFDocument({ 
     size: 'A4',
     layout: 'landscape',
@@ -87,6 +94,8 @@ async function generateCertificatePDF(params) {
     bufferPages: false,
     autoFirstPage: true
   });
+
+  
   const writeStream = fs.createWriteStream(filePath);
   doc.pipe(writeStream);
 
@@ -226,6 +235,8 @@ async function generateCertificatePDF(params) {
   const rightLabelX = rightSigX + 10;
 
   doc.rect(qrX - 8, qrY - 8, qrSize + 16, qrSize + 16).lineWidth(2).stroke('#1c1c1c');
+
+
   doc.image(qrPngBuffer, qrX, qrY, { fit: [qrSize, qrSize] });
 
   doc

@@ -1,5 +1,8 @@
 const { verifyToken } = require('../utils/jwt');
 const pool = require('../config/db');
+const sessionService = require('../services/sessionService');
+
+const SESSION_IDLE_TIMEOUT_MS = parseInt(process.env.SESSION_IDLE_TIMEOUT_MS || String(30 * 60 * 1000), 10); // 30 minutes default
 
 async function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -11,6 +14,32 @@ async function authMiddleware(req, res, next) {
   const token = parts[1];
   try {
     const payload = verifyToken(token);
+
+    // Enforce server-side session validation when JWT contains a jti
+    if (payload && payload.jti) {
+      const session = await sessionService.getSessionByJti(payload.jti);
+      if (!session || session.revoked === 1) {
+        return res.status(401).json({ success: false, message: 'Session is not active' });
+      }
+
+      // Check expiry recorded in sessions table
+      if (session.expires_at && new Date(session.expires_at).getTime() <= Date.now()) {
+        await sessionService.revokeSession(payload.jti).catch(() => {});
+        return res.status(401).json({ success: false, message: 'Session expired' });
+      }
+
+      // Check idle timeout
+      if (SESSION_IDLE_TIMEOUT_MS > 0 && session.last_activity) {
+        const lastActivityMs = new Date(session.last_activity).getTime();
+        if (Date.now() - lastActivityMs > SESSION_IDLE_TIMEOUT_MS) {
+          await sessionService.revokeSession(payload.jti).catch(() => {});
+          return res.status(401).json({ success: false, message: 'Session expired due to inactivity' });
+        }
+      }
+
+      // Update last_activity to keep session alive
+      await sessionService.touchSession(payload.jti).catch(() => {});
+    }
 
     if (payload && ['admin', 'super-admin'].includes(payload.role)) {
       const [rows] = await pool.execute(

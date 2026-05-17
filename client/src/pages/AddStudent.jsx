@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import api from '../services/api';
+import { validateEmail, validateName, validateEnrollmentNumber } from '../utils/validators';
 
 export default function AddStudent() {
   const [name, setName] = useState('');
@@ -19,6 +20,13 @@ export default function AddStudent() {
     type: 'success',
     text: ''
   });
+  const [nameError, setNameError] = useState(null);
+  const [emailError, setEmailError] = useState(null);
+  const [enrollError, setEnrollError] = useState(null);
+  const [emailAvailable, setEmailAvailable] = useState(null);
+  const [enrollAvailable, setEnrollAvailable] = useState(null);
+  const emailTimer = useRef(null);
+  const enrollTimer = useRef(null);
   const currentYear = new Date().getFullYear();
   const yearOptions = Array.from({ length: currentYear - 1999 + 8 }, (_, index) => String(currentYear + 8 - index));
 
@@ -39,9 +47,16 @@ export default function AddStudent() {
     setLoading(true);
 
     try {
-      if (!name || !email || !enrollmentNumber) {
-        throw new Error('Name, email, and Student ID are required');
-      }
+      // client-side validation
+      const nErr = validateName(name);
+      const eErr = validateEmail(email);
+      const enErr = validateEnrollmentNumber(enrollmentNumber);
+      if (nErr) throw new Error(nErr);
+      if (eErr) throw new Error(eErr);
+      if (enErr) throw new Error(enErr);
+
+      if (emailAvailable === false) throw new Error('Email already in use');
+      if (enrollAvailable === false) throw new Error('Student ID already in use');
 
       const res = await api.post('/admin/students', {
         name,
@@ -69,6 +84,42 @@ export default function AddStudent() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setNameError(validateName(name));
+  }, [name]);
+
+  useEffect(() => {
+    setEmailError(validateEmail(email));
+    setEmailAvailable(null);
+    if (emailTimer.current) clearTimeout(emailTimer.current);
+    if (!email || validateEmail(email)) return;
+    emailTimer.current = setTimeout(async () => {
+      try {
+        const res = await api.post('/admin/check-availability', { email });
+        setEmailAvailable(res.data?.data?.emailAvailable === true);
+      } catch (err) {
+        setEmailAvailable(null);
+      }
+    }, 600);
+    return () => emailTimer.current && clearTimeout(emailTimer.current);
+  }, [email]);
+
+  useEffect(() => {
+    setEnrollError(validateEnrollmentNumber(enrollmentNumber));
+    setEnrollAvailable(null);
+    if (enrollTimer.current) clearTimeout(enrollTimer.current);
+    if (!enrollmentNumber || validateEnrollmentNumber(enrollmentNumber)) return;
+    enrollTimer.current = setTimeout(async () => {
+      try {
+        const res = await api.post('/admin/check-availability', { enrollmentNumber });
+        setEnrollAvailable(res.data?.data?.enrollmentAvailable === true);
+      } catch (err) {
+        setEnrollAvailable(null);
+      }
+    }, 600);
+    return () => enrollTimer.current && clearTimeout(enrollTimer.current);
+  }, [enrollmentNumber]);
 
   return (
     <>
@@ -141,6 +192,9 @@ export default function AddStudent() {
                     placeholder="Enter student name"
                     required
                   />
+                    {nameError && (
+                      <div className="form-text text-danger">{nameError}</div>
+                    )}
                 </div>
 
                 <div className="col-md-6 mb-3">
@@ -153,6 +207,13 @@ export default function AddStudent() {
                     placeholder="student@example.com"
                     required
                   />
+                  {emailError && <div className="form-text text-danger">{emailError}</div>}
+                  {email && !emailError && emailAvailable === true && (
+                    <div className="form-text text-success">Email available</div>
+                  )}
+                  {email && !emailError && emailAvailable === false && (
+                    <div className="form-text text-danger">Email already in use</div>
+                  )}
                 </div>
               </div>
 
@@ -195,6 +256,13 @@ export default function AddStudent() {
                     placeholder="Enter Student ID"
                     required
                   />
+                  {enrollError && <div className="form-text text-danger">{enrollError}</div>}
+                  {enrollmentNumber && !enrollError && enrollAvailable === true && (
+                    <div className="form-text text-success">Student ID available</div>
+                  )}
+                  {enrollmentNumber && !enrollError && enrollAvailable === false && (
+                    <div className="form-text text-danger">Student ID already in use</div>
+                  )}
                 </div>
 
                 <div className="col-md-6 mb-3">
@@ -249,7 +317,7 @@ export default function AddStudent() {
               <button
                 type="submit"
                 className="btn btn-primary w-100 mt-2"
-                disabled={loading}
+                disabled={loading || !!nameError || !!emailError || !!enrollError || emailAvailable === false || enrollAvailable === false}
                 style={{ 
                   padding: '10px 14px',
                   fontSize: '16px',

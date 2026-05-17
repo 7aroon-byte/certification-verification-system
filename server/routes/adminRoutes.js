@@ -7,6 +7,7 @@ router.post('/login', adminController.login);
 router.post('/forgot-password', adminController.forgotPassword);
 router.post('/verify-otp', adminController.verifyOTP);
 router.post('/reset-password', adminController.resetPassword);
+router.post('/check-availability', authMiddleware, requireRole('admin'), adminController.checkStudentAvailability);
 router.get('/me', authMiddleware, requireRole('admin'), adminController.getMe);
 router.post('/logout', authMiddleware, requireRole('admin'), adminController.logout);
 router.post('/students', authMiddleware, requireRole('admin'), adminController.createStudent);

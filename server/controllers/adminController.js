@@ -201,7 +201,19 @@ async function createStudent(req, res) {
 
     const deletedByEmail = await userService.findStudentByEmailIncludingDeleted(email);
     const deletedByEnrollment = await userService.findStudentByEnrollmentNumberIncludingDeleted(enrollmentNumber);
-    const deletedRecord = deletedByEmail?.is_deleted ? deletedByEmail : (deletedByEnrollment?.is_deleted ? deletedByEnrollment : null);
+
+    const deletedEmailRecord = deletedByEmail?.is_deleted ? deletedByEmail : null;
+    const deletedEnrollmentRecord = deletedByEnrollment?.is_deleted ? deletedByEnrollment : null;
+
+    // If email and enrollment point to two different soft-deleted rows, restoring either will violate unique keys.
+    if (deletedEmailRecord && deletedEnrollmentRecord && deletedEmailRecord.id !== deletedEnrollmentRecord.id) {
+      return res.status(409).json({
+        success: false,
+        message: 'Conflicting archived records found for this email and enrollment number. Use the original email-enrollment pair or update one archived record before creating a new student.'
+      });
+    }
+
+    const deletedRecord = deletedEmailRecord || deletedEnrollmentRecord || null;
 
     // Generate temporary password
     const temporaryPassword = generateTemporaryPassword(enrollmentNumber);
@@ -226,7 +238,7 @@ async function createStudent(req, res) {
       : await userService.createStudent(createPayload);
 
     // Send account creation email with temporary credentials
-    const loginUrl = process.env.PUBLIC_BASE_URL || 'http://localhost:5000';
+    const loginUrl = process.env.PUBLIC_BASE_URL || 'https://certification-verification-system.vercel.app';
     const studentLoginUrl = `${loginUrl}/student/login`;
     
     // Send account creation email with temporary credentials in background
@@ -260,6 +272,28 @@ async function createStudent(req, res) {
     });
   } catch (error) {
     console.error('Error creating student:', error);
+
+    if (error?.code === 'ER_DUP_ENTRY') {
+      const message = String(error?.sqlMessage || error?.message || 'Duplicate entry');
+      if (message.includes('students.enrollment_number')) {
+        return res.status(409).json({
+          success: false,
+          message: 'This enrollment number already exists in another student record.'
+        });
+      }
+      if (message.includes('students.email')) {
+        return res.status(409).json({
+          success: false,
+          message: 'This email already exists in another student record.'
+        });
+      }
+
+      return res.status(409).json({
+        success: false,
+        message: 'Duplicate student data found. Please use a different email or enrollment number.'
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: error.message || 'Failed to create student account'
@@ -1046,7 +1080,7 @@ async function createAdmin(req, res) {
       [name, email, passwordHash, normalizedRole, req.user.id, true, 'active']
     );
 
-    const loginUrl = process.env.PUBLIC_BASE_URL || 'http://localhost:5000';
+    const loginUrl = process.env.PUBLIC_BASE_URL || 'https://certification-verification-system.vercel.app';
     const adminLoginUrl = `${loginUrl}/admin/login`;
 
     try {
