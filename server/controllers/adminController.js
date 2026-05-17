@@ -12,6 +12,7 @@ const {
 } = require('../services/auditService');
 const { getVerificationInsights } = require('../services/verificationAnalyticsService');
 const crypto = require('crypto');
+const sessionService = require('../services/sessionService');
 
 function toBlockchainIssueFailureMessage(rawErrorMessage) {
   const normalized = String(rawErrorMessage || '').trim().toLowerCase();
@@ -70,16 +71,23 @@ async function login(req, res) {
     ipAddress: req.ip,
     userAgent: req.get('user-agent') || null,
   });
+  const { token, jti, expiresAt } = signToken({ ...user, isFirstLogin: !!user.is_first_login });
 
-  const token = signToken({ ...user, isFirstLogin: !!user.is_first_login });
+  // Create a server-side session record so authMiddleware can validate the JWT
+  try {
+    await sessionService.createSession({ jti, userId: user.id, role: user.role, expiresAt });
+  } catch (sessErr) {
+    console.warn('Failed to create session record for admin login:', sessErr.message || sessErr);
+  }
+
   console.log('Login successful, token generated');
   res.json({
     success: true,
     data: {
       token,
       isFirstLogin: user.is_first_login === true || user.is_first_login === 1,
-        role: user.role,
-        status: user.status || 'active'
+      role: user.role,
+      status: user.status || 'active'
     }
   });
 }
