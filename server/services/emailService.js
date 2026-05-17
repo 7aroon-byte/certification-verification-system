@@ -10,7 +10,8 @@ function createTransporter() {
   const config = {
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT || '587', 10),
-    secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+    // Use secure=true for SMTPS (port 465). For STARTTLS (port 587) use secure=false.
+    secure: process.env.SMTP_SECURE === 'true',
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
@@ -41,10 +42,12 @@ async function sendOTPEmail({ to, name, otp, role, expiryMinutes = 2 }) {
     const fromName = process.env.SMTP_FROM_NAME || 'Certificate Verification System';
     const fromEmail = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER;
     
+    const roleLabel = role === 'super-admin' ? 'Super Admin' : role === 'admin' ? 'Admin' : 'Student';
+
     const mailOptions = {
       from: `"${fromName}" <${fromEmail}>`,
       to: to,
-      subject: `Password Reset OTP - ${role === 'admin' ? 'Admin' : 'Student'} Account`,
+      subject: `Password Reset OTP - ${roleLabel} Account`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -67,7 +70,7 @@ async function sendOTPEmail({ to, name, otp, role, expiryMinutes = 2 }) {
             </div>
             <div class="content">
               <p>Hello <strong>${name}</strong>,</p>
-              <p>We received a request to reset your password for your <strong>${role === 'admin' ? 'Admin' : 'Student'}</strong> account.</p>
+              <p>We received a request to reset your password for your <strong>${roleLabel}</strong> account.</p>
               
               <div class="otp-box">
                 <p style="margin: 0; font-size: 14px; color: #666;">Your One-Time Password (OTP)</p>
@@ -98,22 +101,22 @@ async function sendOTPEmail({ to, name, otp, role, expiryMinutes = 2 }) {
         </html>
       `,
       text: `
-Hello ${name},
+    Hello ${name},
 
-We received a request to reset your password for your ${role === 'admin' ? 'Admin' : 'Student'} account.
+    We received a request to reset your password for your ${roleLabel} account.
 
-Your One-Time Password (OTP): ${otp}
+    Your One-Time Password (OTP): ${otp}
 
-This OTP is valid for ${expiryMinutes} minutes only.
+    This OTP is valid for ${expiryMinutes} minutes only.
 
-Enter this OTP on the password reset page to continue.
+    Enter this OTP on the password reset page to continue.
 
-SECURITY NOTICE:
-- Do not share this code with anyone
-- If you didn't request this, please ignore this email
+    SECURITY NOTICE:
+    - Do not share this code with anyone
+    - If you didn't request this, please ignore this email
 
-This is an automated message, please do not reply.
-      `.trim(),
+    This is an automated message, please do not reply.
+          `.trim(),
     };
 
     const info = await transporter.sendMail(mailOptions);
