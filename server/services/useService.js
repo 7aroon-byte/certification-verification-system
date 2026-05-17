@@ -324,7 +324,26 @@ async function findCertificateByHashOrTx({ certHash, txHash }) {
          AND COALESCE(c.is_deleted, 0) = 0`,
       [certHash]
     );
-    return rows[0];
+    if (rows && rows.length > 0) return rows[0];
+
+    // Fallback to archived certificates
+    const [archRows] = await pool.execute(
+      `SELECT a.*, 
+              s.name AS current_student_name,
+              s.enrollment_number AS current_enrollment_number,
+              s.enrollment_year AS current_enrollment_year,
+              s.graduation_year AS current_graduation_year
+       FROM archived_certificates a
+       LEFT JOIN students s ON s.id = a.student_id AND COALESCE(s.is_deleted, 0) = 0
+       WHERE a.pdf_hash = ?
+         AND COALESCE(a.is_deleted, 0) = 0`,
+      [certHash]
+    );
+    if (archRows && archRows.length > 0) {
+      archRows[0].is_archived = 1;
+      return archRows[0];
+    }
+    return null;
   }
   if (txHash) {
     const [rows] = await pool.execute(
@@ -339,7 +358,25 @@ async function findCertificateByHashOrTx({ certHash, txHash }) {
          AND COALESCE(c.is_deleted, 0) = 0`,
       [txHash]
     );
-    return rows[0];
+    if (rows && rows.length > 0) return rows[0];
+
+    const [archRows] = await pool.execute(
+      `SELECT a.*, 
+              s.name AS current_student_name,
+              s.enrollment_number AS current_enrollment_number,
+              s.enrollment_year AS current_enrollment_year,
+              s.graduation_year AS current_graduation_year
+       FROM archived_certificates a
+       LEFT JOIN students s ON s.id = a.student_id AND COALESCE(s.is_deleted, 0) = 0
+       WHERE a.blockchain_tx_hash = ?
+         AND COALESCE(a.is_deleted, 0) = 0`,
+      [txHash]
+    );
+    if (archRows && archRows.length > 0) {
+      archRows[0].is_archived = 1;
+      return archRows[0];
+    }
+    return null;
   }
   return null;
 }
@@ -357,7 +394,26 @@ async function findCertificateByVerificationCode(code) {
        AND COALESCE(c.is_deleted, 0) = 0`,
     [code]
   );
-  return rows[0] || null;
+  if (rows && rows.length > 0) return rows[0];
+
+  // fallback to archived
+  const [archRows] = await pool.execute(
+    `SELECT a.*, 
+            s.name AS current_student_name,
+            s.enrollment_number AS current_enrollment_number,
+            s.enrollment_year AS current_enrollment_year,
+            s.graduation_year AS current_graduation_year
+     FROM archived_certificates a
+     LEFT JOIN students s ON s.id = a.student_id AND COALESCE(s.is_deleted, 0) = 0
+     WHERE a.verification_code = ?
+       AND COALESCE(a.is_deleted, 0) = 0`,
+    [code]
+  );
+  if (archRows && archRows.length > 0) {
+    archRows[0].is_archived = 1;
+    return archRows[0];
+  }
+  return null;
 }
 
 async function findCertificateForPublicVerify(identifier) {
@@ -409,6 +465,53 @@ async function findCertificateForPublicVerify(identifier) {
   return exactMatch || rows[0];
 }
 
+// If not found in active certificates, attempt archived table
+async function findCertificateForPublicVerifyWithArchive(identifier) {
+  const normalized = String(identifier || '').trim();
+  if (!normalized) return null;
+  const normalizeText = (value) =>
+    String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
+  const normalizedInput = normalizeText(normalized);
+  const likeInput = `%${normalized}%`;
+
+  const [rows] = await pool.execute(
+    `SELECT a.*, 
+            s.name AS current_student_name,
+            s.enrollment_number AS current_enrollment_number,
+            s.enrollment_year AS current_enrollment_year,
+            s.graduation_year AS current_graduation_year
+     FROM archived_certificates a
+     LEFT JOIN students s ON s.id = a.student_id AND COALESCE(s.is_deleted, 0) = 0
+     WHERE COALESCE(a.is_deleted, 0) = 0
+       AND (
+         a.verification_code = ?
+         OR a.enrollment_number = ?
+         OR s.enrollment_number = ?
+         OR a.student_name LIKE ?
+         OR s.name LIKE ?
+       )
+     ORDER BY a.archived_at DESC
+     LIMIT 25`,
+    [normalized, normalized, normalized, likeInput, likeInput]
+  );
+
+  if (!rows || rows.length === 0) return null;
+
+  const exactMatch = rows.find((row) => {
+    const codeMatch = normalizeText(row.verification_code) === normalizedInput;
+    const certEnrollmentMatch = normalizeText(row.enrollment_number) === normalizedInput;
+    const currentEnrollmentMatch = normalizeText(row.current_enrollment_number) === normalizedInput;
+    const certNameMatch = normalizeText(row.student_name) === normalizedInput;
+    const currentNameMatch = normalizeText(row.current_student_name) === normalizedInput;
+
+    return codeMatch || certEnrollmentMatch || currentEnrollmentMatch || certNameMatch || currentNameMatch;
+  });
+
+  const result = exactMatch || rows[0];
+  if (result) result.is_archived = 1;
+  return result;
+}
+
 async function getCertificateById(id, executor = pool) {
   const [rows] = await executor.execute(
     `SELECT c.id,
@@ -434,7 +537,26 @@ async function getCertificateById(id, executor = pool) {
      LIMIT 1`,
     [id]
   );
-  return rows[0] || null;
+  if (rows && rows.length > 0) return rows[0];
+
+  // fallback to archived certificates (match by original_certificate_id or archived row id)
+  const [archRows] = await executor.execute(
+    `SELECT a.id, a.original_certificate_id, a.student_id, a.enrollment_number, a.student_name, a.start_date, a.finished_date, a.exam_type, a.position_held, a.conduct, a.date_issued, a.verification_code, a.status, a.is_deleted,
+            s.name AS current_student_name,
+            s.enrollment_number AS current_enrollment_number,
+            s.enrollment_year AS current_enrollment_year,
+            s.graduation_year AS current_graduation_year
+     FROM archived_certificates a
+     LEFT JOIN students s ON s.id = a.student_id AND COALESCE(s.is_deleted, 0) = 0
+     WHERE (a.original_certificate_id = ? OR a.id = ?)
+     LIMIT 1`,
+    [id, id]
+  );
+  if (archRows && archRows.length > 0) {
+    archRows[0].is_archived = 1;
+    return archRows[0];
+  }
+  return null;
 }
 
 async function recalculateStudentStatusFromCertificates({ studentId, enrollmentNumber }, executor = pool) {
@@ -618,6 +740,75 @@ async function deleteCertificate(id) {
     ['deleted', 'deleted', id]
   );
   return result.affectedRows;
+}
+
+async function restoreCertificateFromArchive(archiveId) {
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+
+    const [rows] = await connection.execute(
+      'SELECT * FROM archived_certificates WHERE id = ? LIMIT 1',
+      [archiveId]
+    );
+    if (!rows || rows.length === 0) {
+      await connection.rollback();
+      return { affectedRows: 0, message: 'Archive row not found' };
+    }
+    const a = rows[0];
+
+    // Check conflicts: verification_code and enrollment_number
+    if (a.verification_code) {
+      const [conf] = await connection.execute('SELECT id FROM certificates WHERE verification_code = ? LIMIT 1', [a.verification_code]);
+      if (conf && conf.length > 0) {
+        await connection.rollback();
+        return { affectedRows: 0, message: 'Conflict: verification_code exists in active certificates' };
+      }
+    }
+    if (a.enrollment_number) {
+      const [conf2] = await connection.execute('SELECT id FROM certificates WHERE enrollment_number = ? LIMIT 1', [a.enrollment_number]);
+      if (conf2 && conf2.length > 0) {
+        // It's acceptable for multiple certificates to have same enrollment_number (different exams), so skip strict conflict here.
+      }
+    }
+
+    const [insertResult] = await connection.execute(
+      `INSERT INTO certificates (student_id, enrollment_number, student_name, start_date, finished_date, date_issued, pdf_hash, blockchain_tx_hash, status, blockchain_status, issuer_wallet, verification_code, exam_type, position_held, conduct, is_deleted, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        a.student_id || null,
+        a.enrollment_number || null,
+        a.student_name || null,
+        a.start_date || null,
+        a.finished_date || null,
+        a.date_issued || null,
+        a.pdf_hash || null,
+        a.blockchain_tx_hash || null,
+        a.status || 'issued',
+        a.blockchain_status || null,
+        a.issuer_wallet || null,
+        a.verification_code || null,
+        a.exam_type || null,
+        a.position_held || null,
+        a.conduct || null,
+        a.is_deleted || 0,
+        a.created_at || null,
+        a.updated_at || null
+      ]
+    );
+
+    // Optionally remove from archive (we'll delete the archived row to avoid duplicates)
+    await connection.execute('DELETE FROM archived_certificates WHERE id = ?', [archiveId]);
+
+    await connection.commit();
+    return { affectedRows: insertResult.affectedRows, insertedId: insertResult.insertId };
+  } catch (err) {
+    await connection.rollback();
+    console.error('Error restoring archived certificate:', err);
+    throw err;
+  } finally {
+    connection.release();
+  }
 }
 
 async function revokeCertificate(id) {

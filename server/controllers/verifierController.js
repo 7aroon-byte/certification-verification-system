@@ -49,7 +49,15 @@ async function publicVerify(req, res) {
     }
 
     const userService = require('../services/useService');
-    const certificate = await userService.findCertificateForPublicVerify(identifier);
+    // First try active certificates, then fallback to archived certificates
+    let certificate = await userService.findCertificateForPublicVerify(identifier);
+    if (!certificate) {
+      // Try archived fallback
+      if (typeof userService.findCertificateForPublicVerifyWithArchive === 'function') {
+        certificate = await userService.findCertificateForPublicVerifyWithArchive(identifier);
+      }
+    }
+
     if (!certificate) {
       await trackVerification(req, {
         mode: 'search',
