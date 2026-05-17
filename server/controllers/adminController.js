@@ -656,8 +656,14 @@ async function updateProfile(req, res) {
     console.log('Update result:', result);
 
     // Generate new token with updated info
-    const { signToken } = require('../utils/jwt');
-    const token = signToken({ id: userId, name, email, role: req.user.role });
+    const { token, jti, expiresAt } = signToken({ id: userId, name, email, role: req.user.role });
+
+    // Create a new server-side session for the new token (best-effort)
+    try {
+      await sessionService.createSession({ jti, userId, role: req.user.role, expiresAt });
+    } catch (sessErr) {
+      console.warn('Failed to create session for updated profile token:', sessErr.message || sessErr);
+    }
 
     res.json({
       success: true,
@@ -1282,10 +1288,10 @@ async function forgotPassword(req, res) {
   try {
     const pool = require('../config/db');
     
-    // Find admin by name
+    // Find admin by name (allow both admin and super-admin roles)
     const [rows] = await pool.execute(
-      'SELECT id, name, email FROM admin WHERE name = ? AND role = ?',
-      [name.trim(), 'admin']
+      "SELECT id, name, email, role FROM admin WHERE name = ? AND role IN (?, ?)",
+      [name.trim(), 'admin', 'super-admin']
     );
 
     if (!rows || rows.length === 0) {
@@ -1321,11 +1327,12 @@ async function forgotPassword(req, res) {
 
     // Send OTP via email
     try {
+      // Use the actual admin role when sending so email templates can vary for super-admins if needed
       await sendOTPEmail({
         to: admin.email,
         name: admin.name,
         otp,
-        role: 'admin',
+        role: admin.role || 'admin',
         expiryMinutes: 2
       });
     } catch (emailError) {
