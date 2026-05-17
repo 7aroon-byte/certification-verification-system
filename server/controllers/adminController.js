@@ -1339,9 +1339,14 @@ async function forgotPassword(req, res) {
       // Clean up OTP data if email fails
       otpStore.delete(`admin_${name.trim()}`);
       console.error('Failed to send OTP email:', emailError);
-      return res.status(500).json({ 
-        success: false, 
-        message: 'Failed to send OTP email. Please try again or contact support.',
+      const normalized = String(emailError?.message || '').toLowerCase();
+      const isTimeout = normalized.includes('timeout') || normalized.includes('etimedout') || normalized.includes('econnrefused');
+      return res.status(isTimeout ? 503 : 500).json({ 
+        success: false,
+        code: isTimeout ? 'EMAIL_SERVICE_UNAVAILABLE' : 'EMAIL_SEND_FAILED',
+        message: isTimeout
+          ? 'Email service is temporarily unavailable. Please try again later.'
+          : 'Failed to send OTP email. Please try again or contact support.',
         error: emailError?.message || emailError?.toString() || 'Unknown error'
       });
     }
