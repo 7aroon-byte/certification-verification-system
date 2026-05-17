@@ -127,6 +127,39 @@ async function getStudentLogs(req, res) {
   }
 }
 
+async function checkStudentAvailability(req, res) {
+  try {
+    const email = String(req.body?.email || '').trim();
+    const enrollmentNumber = String(req.body?.enrollmentNumber || '').trim();
+
+    if (!email && !enrollmentNumber) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email or enrollment number is required'
+      });
+    }
+
+    const [emailRecord, enrollmentRecord] = await Promise.all([
+      email ? userService.findStudentByEmailIncludingDeleted(email) : Promise.resolve(null),
+      enrollmentNumber ? userService.findStudentByEnrollmentNumberIncludingDeleted(enrollmentNumber) : Promise.resolve(null),
+    ]);
+
+    return res.json({
+      success: true,
+      data: {
+        emailAvailable: email ? !emailRecord : null,
+        enrollmentAvailable: enrollmentNumber ? !enrollmentRecord : null,
+      }
+    });
+  } catch (error) {
+    console.error('Error checking student availability:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to check student availability'
+    });
+  }
+}
+
 async function getAdminLogs(req, res) {
   try {
     const { limit, offset } = req.query;
@@ -1225,7 +1258,7 @@ async function deleteAdmin(req, res) {
   }
 }
 
-module.exports = { login, logout, getMe, getAuditLogs, getStudentLogs, getAdminLogs, getCertificateLogs, getVerificationAnalytics, createStudent, getAllUsers, getCertificates, issueCertificate, updateProfile, changePassword, updateCertificateArtifacts, backfillIssuedCertificateQRCodes, deleteCertificate, revokeCertificate, deleteStudent, updateStudent, forgotPassword, verifyOTP, resetPassword, getAllAdmins, createAdmin, updateAdmin, suspendAdmin, deleteAdmin };
+module.exports = { login, logout, getMe, getAuditLogs, getStudentLogs, getAdminLogs, getCertificateLogs, getVerificationAnalytics, checkStudentAvailability, createStudent, getAllUsers, getCertificates, issueCertificate, updateProfile, changePassword, updateCertificateArtifacts, backfillIssuedCertificateQRCodes, deleteCertificate, revokeCertificate, deleteStudent, updateStudent, forgotPassword, verifyOTP, resetPassword, getAllAdmins, createAdmin, updateAdmin, suspendAdmin, deleteAdmin };
 
 // Store OTPs temporarily (in production, use Redis or database)
 const otpStore = new Map();
