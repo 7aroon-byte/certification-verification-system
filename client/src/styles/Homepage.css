@@ -53,6 +53,12 @@
   min-height: 86px;
   clip-path: polygon(0 0, calc(100% - 54px) 0, 100% 100%, 0 100%);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  /* full-bleed panel centered then shifted to fill viewport — flush to extreme left */
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  max-width: none;
 }
 
 .ihecvs-homepage .top-logo {
