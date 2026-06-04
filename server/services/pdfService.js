@@ -10,7 +10,7 @@ function toYear(value) {
 
 
   const directYear = normalized.match(/^\d{4}$/);
-  if (directYear) return directYear[0]; 2 a   1245RU89Y76T54343 476 -=+-8=-0987++
+  if (directYear) return directYear[0];
 
   const isoYear = normalized.match(/^(\d{4})-\d{2}-\d{2}$/);
   if (isoYear) return isoYear[1];
@@ -354,15 +354,18 @@ async function generateCertificatePDF(params) {
       lineBreak: false
     });
 
+  // Wait for the writable stream to finish before reading the file back.
+  const finished = new Promise((resolve, reject) => {
+    writeStream.on('finish', resolve);
+    writeStream.on('error', reject);
+  });
+
   // Finalize the PDF and end the stream
   doc.flushPages();
   doc.end();
 
   // Wait for stream finish
-  await new Promise((resolve, reject) => {
-    writeStream.on('finish', resolve);
-    writeStream.on('error', reject);
-  });
+  await finished;
 
   // Compute SHA-256 hash of the PDF
   const buffer = fs.readFileSync(filePath);
