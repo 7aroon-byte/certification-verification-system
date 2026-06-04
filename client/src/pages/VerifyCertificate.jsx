@@ -160,7 +160,7 @@ export default function VerifyCertificate() {
             <div className="top-nav-links" aria-label="Primary links">
               <Link to="/">HOME</Link>
               <Link className="active" to="/verify">VERIFICATION</Link>
-              <Link to="/contact">ENQUIRY/SUPPORT</Link>
+              <Link to="/contact">ENQUIRY</Link>
               <Link to="/student/login">SIGN IN</Link>
             </div>
           </div>

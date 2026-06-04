@@ -24,11 +24,11 @@
 }
 
 .ihecvs-homepage .top-strip {
-  background: linear-gradient(90deg, #7a0c18 0%, #550212 100%);
+  background: linear-gradient(90deg, #8e1220 0%, #5a0011 100%);
   color: #ffffff;
   font-size: 15px;
   line-height: 1.2;
-  border-bottom: 1px solid #3b0408;
+  border-bottom: 1px solid #5b0810;
 }
 
 .ihecvs-homepage .top-strip-inner {
@@ -48,13 +48,17 @@
   font-size: 15px;
   font-weight: 400;
   background: #ffffff;
-  color: #6e0f16;
+  color: #7a1030;
   padding: 10px 28px 10px 14px;
   min-height: 86px;
   clip-path: polygon(0 0, calc(100% - 54px) 0, 100% 100%, 0 100%);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-  margin-left: -18px;
-  margin-right: -18px;
+  /* make the white brand panel full-bleed to the viewport left edge */
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  max-width: none;
 }
 
 .ihecvs-homepage .top-logo {
@@ -62,6 +66,11 @@
   width: auto;
   display: block;
   object-fit: contain;
+}
+
+/* apply a gentle maroon tint to bitmap logos to match theme */
+.ihecvs-homepage .top-logo {
+  filter: grayscale(1) sepia(0.9) saturate(200%) hue-rotate(-10deg) brightness(0.95);
 }
 
 .ihecvs-homepage .top-brand-copy {
@@ -75,7 +84,7 @@
   font-weight: 700;
   font-size: 2rem;
   letter-spacing: 0.2px;
-  color: #6e0f16;
+  color: #5a0011; /* maroon */
 }
 
 .ihecvs-homepage .top-brand-full {
@@ -83,7 +92,7 @@
   line-height: 1.05;
   letter-spacing: 0.3px;
   text-transform: uppercase;
-  color: #6e0f16;
+  color: #5a0011; /* maroon */
   opacity: 0.98;
 }
 
@@ -113,7 +122,6 @@
   align-items: center;
   justify-content: center;
   gap: 24px;
-  background: linear-gradient(90deg, #7a0c18 0%, #550212 100%);
 }
 
 .ihecvs-homepage .brand-line {
@@ -302,11 +310,11 @@
 
 .ihecvs-homepage .bottom-footer {
   margin-top: 64px;
-  background-color: #7a0c18;
+  background-color: #b22222;
   background-image:
-    radial-gradient(circle at 16% 20%, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px),
-    radial-gradient(circle at 60% 36%, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px),
-    radial-gradient(circle at 85% 68%, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px);
+    radial-gradient(circle at 16% 20%, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px),
+    radial-gradient(circle at 60% 36%, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px),
+    radial-gradient(circle at 85% 68%, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px);
   background-size: 220px 220px;
   color: #ffffff;
   position: relative;
@@ -357,8 +365,6 @@
     clip-path: none;
     min-height: 0;
     padding: 10px 14px;
-    margin-left: 0;
-    margin-right: 0;
   }
 
   .ihecvs-homepage .top-logo {
