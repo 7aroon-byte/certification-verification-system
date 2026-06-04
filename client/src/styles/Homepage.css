@@ -57,8 +57,16 @@
   position: relative;
   left: 0;
   transform: none;
-  width: 100vw;
+  width: 50vw; /* left half white */
   max-width: none;
+}
+
+@media (max-width: 920px) {
+  .ihecvs-homepage .top-contact {
+    width: 100vw;
+    clip-path: none;
+    padding-right: 14px;
+  }
 }
 
 .ihecvs-homepage .top-logo {

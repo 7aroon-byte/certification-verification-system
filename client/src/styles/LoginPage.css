@@ -46,8 +46,16 @@
   position: relative;
   left: 0;
   transform: none;
-  width: 100vw;
+  width: 50vw; /* left half white */
   max-width: none;
+}
+
+@media (max-width: 920px) {
+  .login-top-contact {
+    width: 100vw;
+    clip-path: none;
+    padding-right: 14px;
+  }
 }
 
 .login-top-logo {
