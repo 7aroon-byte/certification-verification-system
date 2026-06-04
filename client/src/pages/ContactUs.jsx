@@ -69,7 +69,7 @@ export default function ContactUs() {
           {/* Our Location Section */}
           <div className="col-lg-5">
             <div className="card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
-              <div className="card-header text-white py-2" style={{ backgroundColor: '#16507f' }}>
+              <div className="card-header text-white py-2" style={{ backgroundColor: '#5b0b14' }}>
                 <h4 className="mb-0" style={{ fontSize: '1.65rem' }}>Our Location</h4>
               </div>
               <div className="card-body p-2">
@@ -145,7 +145,7 @@ export default function ContactUs() {
           {/* Get in Touch Form Section */}
           <div className="col-lg-7">
             <div className="card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
-              <div className="card-header text-white py-2" style={{ backgroundColor: '#16507f' }}>
+              <div className="card-header text-white py-2" style={{ backgroundColor: '#5b0b14' }}>
                 <h4 className="mb-0" style={{ fontSize: '1.65rem' }}>Get in Touch</h4>
               </div>
               <div className="card-body p-2">

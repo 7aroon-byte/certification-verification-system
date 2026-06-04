@@ -21,9 +21,9 @@
 }
 
 .login-top-strip-inner {
-  max-width: 1420px;
-  margin: 0 auto;
-  padding: 8px 18px;
+  max-width: 100%;
+  margin: 0;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -62,7 +62,7 @@
   font-weight: 700;
   font-size: 2rem;
   letter-spacing: 0.2px;
-  color: #9b2d4d;
+  color: #5b0b14; /* maroon */
 }
 
 .login-top-brand-full {
@@ -70,7 +70,7 @@
   line-height: 1.05;
   letter-spacing: 0.3px;
   text-transform: uppercase;
-  color: #9b2d4d;
+  color: #5b0b14; /* maroon */
   opacity: 0.98;
 }
 
