@@ -8,8 +8,44 @@
   background: var(--bg);
 }
 
+.verify-page .top-strip {
+  background: linear-gradient(90deg, #c1121f 0%, #7f0c14 100%);
+  color: #ffffff;
+  border-bottom: 1px solid #5b0810;
+}
+
+.verify-page .top-strip-inner {
+  align-items: center;
+}
+
+.verify-page .top-contact {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
 .verify-page .top-logo {
-  height: 56px;
+  height: 72px;
+}
+
+.verify-page .top-brand-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+
+.verify-page .top-brand-abbr {
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: 0.3px;
+}
+
+.verify-page .top-brand-full {
+  font-size: 0.58rem;
+  line-height: 1.1;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  opacity: 0.92;
 }
 
 .verify-container {

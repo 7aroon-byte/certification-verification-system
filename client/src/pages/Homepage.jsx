@@ -10,7 +10,10 @@ export default function Homepage() {
           <div className="top-strip-inner">
             <div className="top-contact">
               <img className="top-logo" src="/logo.png" alt="IHECVS logo" />
-              <strong>IHECVS</strong>
+              <div className="top-brand-copy">
+                <strong className="top-brand-abbr">IHECVS</strong>
+                <span className="top-brand-full">Imamu Hafsin e-Certificate Verification System</span>
+              </div>
             </div>
             <div className="top-nav-links" aria-label="Primary links">
               <Link className="active" to="/">HOME</Link>

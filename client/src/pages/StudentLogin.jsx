@@ -78,7 +78,10 @@ export default function StudentLogin() {
 				<div className="login-top-strip-inner">
 					<div className="login-top-contact">
 						<img className="login-top-logo" src="/logo.png" alt="IHECVS logo" />
-						<strong>IHECVS</strong>
+						<div className="login-top-brand-copy">
+							<strong className="login-top-brand-abbr">IHECVS</strong>
+							<span className="login-top-brand-full">Imamu Hafsin e-Certificate Verification System</span>
+						</div>
 					</div>
 					<div className="login-top-nav-links" aria-label="Primary links">
 						<Link to="/">HOME</Link>
