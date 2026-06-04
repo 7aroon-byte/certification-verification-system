@@ -279,7 +279,7 @@ async function createStudent(req, res) {
       : await userService.createStudent(createPayload);
 
     // Send account creation email with temporary credentials
-    const loginUrl = process.env.PUBLIC_BASE_URL || 'https://certification-verification-system.vercel.app';
+    const loginUrl = process.env.PUBLIC_VERIFY_BASE_URL || process.env.PUBLIC_BASE_URL || 'https://certification-verification-system.vercel.app';
     const studentLoginUrl = `${loginUrl}/student/login`;
     
     // Send account creation email with temporary credentials in background
@@ -1127,7 +1127,7 @@ async function createAdmin(req, res) {
       [name, email, passwordHash, normalizedRole, req.user.id, true, 'active']
     );
 
-    const loginUrl = process.env.PUBLIC_BASE_URL || 'https://certification-verification-system.vercel.app';
+    const loginUrl = process.env.PUBLIC_VERIFY_BASE_URL || process.env.PUBLIC_BASE_URL || 'https://certification-verification-system.vercel.app';
     const adminLoginUrl = `${loginUrl}/admin/login`;
 
     try {

@@ -7,11 +7,18 @@ const nodemailer = require('nodemailer');
 
 // Create reusable transporter
 function createTransporter() {
+  const connectionTimeout = parseInt(process.env.SMTP_CONNECTION_TIMEOUT_MS || '10000', 10);
+  const greetingTimeout = parseInt(process.env.SMTP_GREETING_TIMEOUT_MS || '10000', 10);
+  const socketTimeout = parseInt(process.env.SMTP_SOCKET_TIMEOUT_MS || '10000', 10);
+
   const config = {
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT || '587', 10),
     // Use secure=true for SMTPS (port 465). For STARTTLS (port 587) use secure=false.
     secure: process.env.SMTP_SECURE === 'true',
+    connectionTimeout,
+    greetingTimeout,
+    socketTimeout,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
@@ -26,6 +33,64 @@ function createTransporter() {
   return nodemailer.createTransport(config);
 }
 
+function normalizeAddress(value) {
+  return String(value || '').trim().replace(/^['"]+|['"]+$/g, '');
+}
+
+function isResendConfigured() {
+  return Boolean(normalizeAddress(process.env.RESEND_API_KEY));
+}
+
+async function sendViaResend(mailOptions) {
+  const apiKey = normalizeAddress(process.env.RESEND_API_KEY);
+  if (!apiKey) {
+    throw new Error('Resend API key is not configured');
+  }
+
+  const payload = {
+    from: normalizeAddress(mailOptions.from),
+    to: Array.isArray(mailOptions.to) ? mailOptions.to : [mailOptions.to],
+    subject: mailOptions.subject,
+    html: mailOptions.html,
+    text: mailOptions.text,
+  };
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const bodyText = await response.text().catch(() => '');
+    throw new Error(`Resend API error (${response.status}): ${bodyText || response.statusText}`);
+  }
+
+  const data = await response.json().catch(() => ({}));
+  return { success: true, messageId: data.id || null, provider: 'resend' };
+}
+
+async function sendViaSmtp(mailOptions) {
+  const transporter = createTransporter();
+  const info = await transporter.sendMail(mailOptions);
+  return { success: true, messageId: info.messageId || null, provider: 'smtp' };
+}
+
+async function deliverEmail(mailOptions) {
+  if (isResendConfigured()) {
+    try {
+      return await sendViaResend(mailOptions);
+    } catch (resendError) {
+      console.warn('Resend delivery failed, falling back to SMTP:', resendError?.message || resendError);
+    }
+  }
+
+  return sendViaSmtp(mailOptions);
+}
+
 /**
  * Send OTP email to user
  * @param {Object} params - Email parameters
@@ -37,10 +102,8 @@ function createTransporter() {
  */
 async function sendOTPEmail({ to, name, otp, role, expiryMinutes = 2 }) {
   try {
-    const transporter = createTransporter();
-    
     const fromName = process.env.SMTP_FROM_NAME || 'Certificate Verification System';
-    const fromEmail = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER;
+    const fromEmail = normalizeAddress(process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER);
     
     const roleLabel = role === 'super-admin' ? 'Super Admin' : role === 'admin' ? 'Admin' : 'Student';
 
@@ -119,9 +182,9 @@ async function sendOTPEmail({ to, name, otp, role, expiryMinutes = 2 }) {
           `.trim(),
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`✓ OTP email sent to ${to} (Message ID: ${info.messageId})`);
-    return { success: true, messageId: info.messageId };
+    const info = await deliverEmail(mailOptions);
+    console.log(`✓ OTP email sent to ${to} via ${info.provider || 'smtp'} (Message ID: ${info.messageId})`);
+    return { success: true, messageId: info.messageId, provider: info.provider || 'smtp' };
   } catch (error) {
     // Log detailed error to help diagnose SMTP/auth/config issues
     console.error('✗ Failed to send OTP email:', error?.message || error);
@@ -140,10 +203,8 @@ async function sendOTPEmail({ to, name, otp, role, expiryMinutes = 2 }) {
  */
 async function sendPasswordResetConfirmation({ to, name, role }) {
   try {
-    const transporter = createTransporter();
-    
     const fromName = process.env.SMTP_FROM_NAME || 'Certificate Verification System';
-    const fromEmail = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER;
+    const fromEmail = normalizeAddress(process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER);
     
     const mailOptions = {
       from: `"${fromName}" <${fromEmail}>`,
@@ -167,9 +228,9 @@ async function sendPasswordResetConfirmation({ to, name, role }) {
       text: `Hello ${name},\n\nYour password has been successfully reset for your ${role === 'admin' ? 'Admin' : 'Student'} account.\n\nIf you did not perform this action, please contact support immediately.`,
     };
 
-    await transporter.sendMail(mailOptions);
-    console.log(`✓ Password reset confirmation sent to ${to}`);
-    return { success: true };
+    const info = await deliverEmail(mailOptions);
+    console.log(`✓ Password reset confirmation sent to ${to} via ${info.provider || 'smtp'}`);
+    return { success: true, provider: info.provider || 'smtp' };
   } catch (error) {
     console.error('✗ Failed to send confirmation email:', error.message);
     // Don't throw error for confirmation emails - password reset already succeeded
@@ -188,10 +249,8 @@ async function sendPasswordResetConfirmation({ to, name, role }) {
  */
 async function sendStudentAccountEmail({ to, name, enrollmentNumber, temporaryPassword, loginUrl }) {
   try {
-    const transporter = createTransporter();
-    
     const fromName = process.env.SMTP_FROM_NAME || 'Certificate Verification System';
-    const fromEmail = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER;
+    const fromEmail = normalizeAddress(process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER);
     const systemName = 'Imamu Hafsin e-Certificate Verification System (IHECVS)';
     
     const mailOptions = {
@@ -321,9 +380,9 @@ This is an automated message. Please do not reply to this email.
       `.trim(),
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`✓ Student account email sent to ${to} (Message ID: ${info.messageId})`);
-    return { success: true, messageId: info.messageId };
+    const info = await deliverEmail(mailOptions);
+    console.log(`✓ Student account email sent to ${to} via ${info.provider || 'smtp'} (Message ID: ${info.messageId})`);
+    return { success: true, messageId: info.messageId, provider: info.provider || 'smtp' };
   } catch (error) {
     console.error('✗ Failed to send student account email:', error?.message || error);
     if (error?.response) {
@@ -343,10 +402,8 @@ This is an automated message. Please do not reply to this email.
  */
 async function sendAdminAccountEmail({ to, name, temporaryPassword, loginUrl }) {
   try {
-    const transporter = createTransporter();
-
     const fromName = process.env.SMTP_FROM_NAME || 'Certificate Verification System';
-    const fromEmail = process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER;
+    const fromEmail = normalizeAddress(process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER);
     const systemName = 'Imamu Hafsin e-Certificate Verification System (IHECVS)';
 
     const mailOptions = {
@@ -413,9 +470,9 @@ This is an automated message. Please do not reply.
       `.trim(),
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`✓ Admin account email sent to ${to} (Message ID: ${info.messageId})`);
-    return { success: true, messageId: info.messageId };
+    const info = await deliverEmail(mailOptions);
+    console.log(`✓ Admin account email sent to ${to} via ${info.provider || 'smtp'} (Message ID: ${info.messageId})`);
+    return { success: true, messageId: info.messageId, provider: info.provider || 'smtp' };
   } catch (error) {
     console.error('✗ Failed to send admin account email:', error?.message || error);
     if (error?.response) {
