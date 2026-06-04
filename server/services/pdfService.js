@@ -8,8 +8,9 @@ function toYear(value) {
   const normalized = String(value || '').trim();
   if (!normalized) return '';
 
+
   const directYear = normalized.match(/^\d{4}$/);
-  if (directYear) return directYear[0];
+  if (directYear) return directYear[0]; 2 a   1245RU89Y76T54343 476 -=+-8=-0987++
 
   const isoYear = normalized.match(/^(\d{4})-\d{2}-\d{2}$/);
   if (isoYear) return isoYear[1];

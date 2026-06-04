@@ -290,23 +290,25 @@ export default function ManageStudent() {
                           {normalizeStudentStatus(student.status) === 'suspended' ? 'suspended' : normalizeStudentStatus(student.status)}
                         </span>
                       </td>
-                      <td>
-                        <button
-                          className="btn btn-sm btn-warning me-2"
-                          onClick={() => handleEdit(student)}
-                          aria-label="Edit student"
-                          title="Edit student"
-                        >
-                          <i className="bi bi-pencil"></i>
-                        </button>
-                        <button
-                          className="btn btn-sm btn-danger"
-                          onClick={() => handleDeleteClick(student)}
-                          aria-label="Delete student"
-                          title="Delete student"
-                        >
-                          <i className="bi bi-trash"></i>
-                        </button>
+                      <td style={{ whiteSpace: 'nowrap' }}>
+                        <div className="d-flex gap-2 flex-nowrap align-items-center">
+                          <button
+                            className="btn btn-sm btn-warning"
+                            onClick={() => handleEdit(student)}
+                            aria-label="Edit student"
+                            title="Edit student"
+                          >
+                            <i className="bi bi-pencil"></i>
+                          </button>
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => handleDeleteClick(student)}
+                            aria-label="Delete student"
+                            title="Delete student"
+                          >
+                            <i className="bi bi-trash"></i>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

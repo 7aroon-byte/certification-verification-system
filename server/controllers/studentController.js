@@ -544,6 +544,7 @@ async function resetPassword(req, res) {
       });
     }
 
+    
     // Clean up OTP data (single-use token)
     otpStore.delete(foundKey);
 

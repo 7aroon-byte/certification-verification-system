@@ -339,6 +339,17 @@ async function ensureSessionsSchema() {
 app.use(cors());
 app.use(express.json());
 
+function getPublicVerifyRedirectUrl(req) {
+  const rawBase = process.env.PUBLIC_VERIFY_BASE_URL || process.env.PUBLIC_BASE_URL || 'https://certification-verification-system.vercel.app';
+  const baseUrl = String(rawBase || '').trim().replace(/^['"]+|['"]+$/g, '').replace(/\/+$/, '');
+  const code = String(req.query?.code || '').trim();
+  const url = new URL('/verify', baseUrl);
+  if (code) {
+    url.searchParams.set('code', code);
+  }
+  return url.toString();
+}
+
 // Request logging middleware
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
@@ -351,6 +362,11 @@ app.use((req, res, next) => {
 // Serve public assets like generated certificates
 app.get('/public/certificates/:filename', serveCertificatePdf);
 app.use('/public', express.static(require('path').join(__dirname, 'public')));
+
+// Backward-compatible public verification route for QR codes that hit the backend host directly.
+app.get('/verify', (req, res) => {
+  return res.redirect(302, getPublicVerifyRedirectUrl(req));
+});
 
 // Use modular routes
 app.use('/api/admin', adminRoutes);
