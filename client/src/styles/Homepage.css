@@ -24,7 +24,7 @@
 }
 
 .ihecvs-homepage .top-strip {
-  background: linear-gradient(90deg, #8e1220 0%, #5a0011 100%);
+  background: linear-gradient(90deg, #c1121f 0%, #7f0c14 100%);
   color: #ffffff;
   font-size: 15px;
   line-height: 1.2;
@@ -53,12 +53,6 @@
   min-height: 86px;
   clip-path: polygon(0 0, calc(100% - 54px) 0, 100% 100%, 0 100%);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-  /* make the white brand panel full-bleed to the viewport left edge */
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100vw;
-  max-width: none;
 }
 
 .ihecvs-homepage .top-logo {
@@ -68,10 +62,7 @@
   object-fit: contain;
 }
 
-/* apply a gentle maroon tint to bitmap logos to match theme */
-.ihecvs-homepage .top-logo {
-  filter: grayscale(1) sepia(0.9) saturate(200%) hue-rotate(-10deg) brightness(0.95);
-}
+/* logo styling left as original (no automatic tint) */
 
 .ihecvs-homepage .top-brand-copy {
   display: flex;
@@ -84,7 +75,7 @@
   font-weight: 700;
   font-size: 2rem;
   letter-spacing: 0.2px;
-  color: #5a0011; /* maroon */
+  color: #9b2d4d;
 }
 
 .ihecvs-homepage .top-brand-full {
@@ -92,7 +83,7 @@
   line-height: 1.05;
   letter-spacing: 0.3px;
   text-transform: uppercase;
-  color: #5a0011; /* maroon */
+  color: #9b2d4d;
   opacity: 0.98;
 }
 
