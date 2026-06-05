@@ -359,17 +359,23 @@
 
   .ihecvs-homepage .top-strip-inner {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
   }
 
   .ihecvs-homepage .top-contact {
+    width: 100%;
     font-size: 13px;
-    flex-wrap: wrap;
-    gap: 6px;
+    flex-wrap: nowrap;
+    gap: 10px;
     clip-path: none;
     min-height: 0;
-    padding: 10px 14px;
+    padding: 10px 12px;
+    box-shadow: none;
+    border-radius: 0;
+    justify-content: flex-start;
+    background: #ffffff;
   }
 
   .ihecvs-homepage .top-logo {
@@ -385,12 +391,20 @@
   }
 
   .ihecvs-homepage .top-nav-links {
-    gap: 14px;
-    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    white-space: nowrap;
+    background: linear-gradient(90deg, #c1121f 0%, #7f0c14 100%);
+    padding: 12px 14px;
   }
 
   .ihecvs-homepage .top-nav-links a {
-    font-size: 13px;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    flex: 0 0 auto;
   }
 
   .ihecvs-homepage .brand-strip {
