@@ -369,13 +369,26 @@
     font-size: 13px;
     flex-wrap: nowrap;
     gap: 10px;
-    clip-path: none;
     min-height: 0;
-    padding: 10px 12px;
+    padding: 10px 76px 10px 12px;
     box-shadow: none;
     border-radius: 0;
     justify-content: flex-start;
     background: #ffffff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ihecvs-homepage .top-contact::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 70px;
+    height: 100%;
+    background: linear-gradient(90deg, #8a0e18 0%, #7f0c14 100%);
+    clip-path: polygon(22px 0, 100% 0, 100% 100%, 0 100%);
+    pointer-events: none;
   }
 
   .ihecvs-homepage .top-logo {
