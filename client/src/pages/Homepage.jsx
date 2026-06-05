@@ -1,36 +1,18 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import PublicHeader from '../components/PublicHeader'
 import '../styles/Homepage.css'
 
 export default function Homepage() {
   return (
     <div className="ihecvs-homepage">
-      <header className="site-header" aria-label="Top navigation">
-        <div className="top-strip">
-          <div className="top-strip-inner">
-            <div className="top-contact">
-              <img className="top-logo" src="/logo.png" alt="IHECVS logo" />
-              <div className="top-brand-copy">
-                <strong className="top-brand-abbr">IHECVS</strong>
-                <span className="top-brand-full">Imamu Hafsin e-Certificate Verification System</span>
-              </div>
-            </div>
-            <div className="top-nav-links" aria-label="Primary links">
-              <Link className="active" to="/">HOME</Link>
-              <Link to="/verify">VERIFICATION</Link>
-              <Link id="top-enquiry-link" to="/contact">ENQUIRY</Link>
-              <Link to="/student/login">SIGN IN</Link>
-            </div>
-          </div>
-        </div>
+      <PublicHeader active="home" />
 
-        <div className="brand-strip">
+      <div className="brand-strip">
           <div className="brand-line">
             <span className="brand-welcome">WELCOME TO IHECVS</span>
             <span className="brand-tagline">learning prior to success</span>
           </div>
-        </div>
-      </header>
+      </div>
 
       <section className="showcase" aria-label="IHECVS introduction">
         <section className="showcase-left" aria-label="Graduation visual">

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { verifyCertificateByHash, verifyCertificatePublic } from '../services/api'
+import PublicHeader from '../components/PublicHeader'
 import SlideNotification from '../components/SlideNotification'
 import '../styles/Homepage.css'
 import '../styles/VerifyCertificate.css'
@@ -147,26 +148,7 @@ export default function VerifyCertificate() {
         onClose={() => setNotification((prev) => ({ ...prev, visible: false }))}
       />
 
-      <header className="site-header" aria-label="Top navigation">
-        <div className="top-strip">
-          <div className="top-strip-inner">
-            <div className="top-contact">
-              <img className="top-logo" src="/logo.png" alt="IHECVS logo" />
-              <div className="top-brand-copy">
-                <strong className="top-brand-abbr">IHECVS</strong>
-                <span className="top-brand-full">Imamu Hafsin e-Certificate Verification System</span>
-              </div>
-            </div>
-            <div className="top-nav-links" aria-label="Primary links">
-              <Link to="/">HOME</Link>
-              <Link className="active" to="/verify">VERIFICATION</Link>
-              <Link id="top-enquiry-link" to="/contact">ENQUIRY</Link>
-              <Link to="/student/login">SIGN IN</Link>
-            </div>
-          </div>
-        </div>
-
-      </header>
+      <PublicHeader active="verify" />
 
       <main className="verify-page-shell">
         <div className="verify-container">

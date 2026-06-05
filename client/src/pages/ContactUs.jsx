@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import api from '../services/api';
+import PublicHeader from '../components/PublicHeader';
 import '../styles/LoginPage.css';
 
 export default function ContactUs() {
@@ -44,24 +44,8 @@ export default function ContactUs() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#eef3f9' }}>
-      <header className="login-top-strip" aria-label="Top navigation">
-        <div className="login-top-strip-inner">
-          <div className="login-top-contact">
-            <img className="login-top-logo" src="/logo.png" alt="IHECVS logo" />
-            <div className="login-top-brand-copy">
-              <strong className="login-top-brand-abbr">IHECVS</strong>
-              <span className="login-top-brand-full">Imamu Hafsin e-Certificate Verification System</span>
-            </div>
-          </div>
-          <div className="login-top-nav-links" aria-label="Primary links">
-            <Link to="/">HOME</Link>
-            <Link to="/verify">VERIFICATION</Link>
-              <Link id="top-enquiry-link" className="active" to="/contact">ENQUIRY</Link>
-            <Link to="/student/login">SIGN IN</Link>
-          </div>
-        </div>
-      </header>
+    <div className="ihecvs-homepage" style={{ minHeight: '100vh', backgroundColor: '#eef3f9' }}>
+      <PublicHeader active="contact" />
 
       {/* Main Content */}
       <div className="container py-5" style={{ marginTop: '18px' }}>
