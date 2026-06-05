@@ -57,7 +57,7 @@ export default function ContactUs() {
           <div className="login-top-nav-links" aria-label="Primary links">
             <Link to="/">HOME</Link>
             <Link to="/verify">VERIFICATION</Link>
-            <Link className="active" to="/contact">ENQUIRY</Link>
+              <Link id="top-enquiry-link" className="active" to="/contact">ENQUIRY</Link>
             <Link to="/student/login">SIGN IN</Link>
           </div>
         </div>

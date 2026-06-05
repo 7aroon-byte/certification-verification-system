@@ -370,7 +370,7 @@
     flex-wrap: nowrap;
     gap: 10px;
     min-height: 0;
-    padding: 10px 64px 10px 12px;
+    padding: 10px 76px 10px 12px;
     box-shadow: none;
     border-radius: 0;
     justify-content: flex-start;
@@ -383,11 +383,11 @@
     content: '';
     position: absolute;
     top: 0;
-    right: 0;
-    width: 58px;
+    left: var(--wedge-start, calc(100% - 70px));
+    width: calc(100% - var(--wedge-start, 70px));
     height: 100%;
-    background: linear-gradient(90deg, #740a12 0%, #7f0c14 100%);
-    clip-path: polygon(28px 0, 100% 0, 100% 100%, 0 100%);
+    background: linear-gradient(90deg, #8a0e18 0%, #7f0c14 100%);
+    clip-path: polygon(22px 0, 100% 0, 100% 100%, 0 100%);
     pointer-events: none;
   }
 

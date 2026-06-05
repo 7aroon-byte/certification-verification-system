@@ -94,7 +94,7 @@ export default function AdminLogin() {
           <div className="login-top-nav-links" aria-label="Primary links">
             <Link to="/">HOME</Link>
             <Link to="/verify">VERIFICATION</Link>
-            <Link to="/contact">ENQUIRY</Link>
+            <Link id="top-enquiry-link" to="/contact">ENQUIRY</Link>
             <Link className="active" to="/admin/login">SIGN IN</Link>
           </div>
         </div>

@@ -18,7 +18,7 @@ export default function Homepage() {
             <div className="top-nav-links" aria-label="Primary links">
               <Link className="active" to="/">HOME</Link>
               <Link to="/verify">VERIFICATION</Link>
-              <Link to="/contact">ENQUIRY</Link>
+              <Link id="top-enquiry-link" to="/contact">ENQUIRY</Link>
               <Link to="/student/login">SIGN IN</Link>
             </div>
           </div>
