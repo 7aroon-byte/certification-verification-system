@@ -91,9 +91,9 @@ body.sidebar-closed .content-wrapper {
 
 .app-footer {
 	width: 100%;
-	background: #ffffff;
+	background: transparent;
 	color: #2d2f33;
-	border-top: 1px solid #e5e7eb;
+	border-top: none;
 }
 
 .app-footer-inner {
@@ -107,5 +107,9 @@ body.sidebar-closed .content-wrapper {
 	gap: 1rem;
 	flex-wrap: wrap;
 	text-align: right;
+}
+
+.ihecvs-footer {
+	margin-top: 0;
 }
 
