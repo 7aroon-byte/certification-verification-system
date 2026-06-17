@@ -301,13 +301,13 @@ module.exports = { login, logout, getMyCertificates, updateProfile, getMe, forgo
 const otpStore = new Map();
 
 async function forgotPassword(req, res) {
-  const { enrollmentNumber, name } = req.body;
+  const { enrollmentNumber, email } = req.body;
   
-  // Student must provide either enrollment number OR full name
-  if ((!enrollmentNumber || enrollmentNumber.trim() === '') && (!name || name.trim() === '')) {
+  // Student must provide either enrollment number OR email
+  if ((!enrollmentNumber || enrollmentNumber.trim() === '') && (!email || email.trim() === '')) {
     return res.status(400).json({ 
       success: false, 
-      message: 'Either enrollment number or full name is required' 
+      message: 'Either enrollment number or email is required' 
     });
   }
 
@@ -315,7 +315,7 @@ async function forgotPassword(req, res) {
     const pool = require('../config/db');
     let rows;
     
-    // Find student by enrollment number or name
+    // Find student by enrollment number or email
     if (enrollmentNumber && enrollmentNumber.trim() !== '') {
       [rows] = await pool.execute(
         'SELECT id, name, email, enrollment_number FROM students WHERE enrollment_number = ?',
@@ -323,15 +323,15 @@ async function forgotPassword(req, res) {
       );
     } else {
       [rows] = await pool.execute(
-        'SELECT id, name, email, enrollment_number FROM students WHERE name = ?',
-        [name.trim()]
+        'SELECT id, name, email, enrollment_number FROM students WHERE email = ?',
+        [email.trim()]
       );
     }
 
     if (!rows || rows.length === 0) {
       return res.status(404).json({ 
         success: false, 
-        message: 'Student not found. Please verify your enrollment number or name.' 
+        message: 'Student not found. Please verify your enrollment number or email.' 
       });
     }
 
@@ -348,8 +348,8 @@ async function forgotPassword(req, res) {
     // Generate secure 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     
-    // Use enrollment number as identifier (fallback to name if not available)
-    const identifier = student.enrollment_number || student.name;
+    // Use enrollment number when available; otherwise use email as the OTP session identifier
+    const identifier = student.enrollment_number || student.email;
     
     // Store OTP with 2 minute expiration
     const otpData = {

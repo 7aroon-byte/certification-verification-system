@@ -24,9 +24,10 @@ export default function ForgotPasswordStudent() {
     setLoading(true);
 
     try {
-      const payload = (identifier || enrollmentNumber).includes('@')
-        ? { email: identifier || enrollmentNumber }
-        : { enrollmentNumber: identifier || enrollmentNumber };
+      const value = (identifier || enrollmentNumber).trim();
+      const payload = value.includes('@')
+        ? { email: value }
+        : { enrollmentNumber: value };
 
       const { data } = await api.post('/student/forgot-password', payload);
       if (data.success) {
