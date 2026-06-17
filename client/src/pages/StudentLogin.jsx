@@ -80,48 +80,48 @@ export default function StudentLogin() {
 			<div className="login-body">
 				<div className="text-center mb-4">
 				</div>
-				<div className="card shadow-lg p-4 w-100" style={{ maxWidth: '28rem', backgroundColor: '#ffffff', border: '1px solid #d9e2ef', borderRadius: '12px' }}>
+				<div className="card shadow-lg p-4 w-100 login-card" style={{ maxWidth: '28rem' }}>
 					<div className="card-body">
 						<h2 className="h4 text-center mb-4 fw-bold">Student Login</h2>
-						<form onSubmit={handleSubmit}>
-						<div className="mb-3">
+						<form className="login-form" onSubmit={handleSubmit}>
+						<div className="login-field">
 							<label className="form-label">Email</label>
 							<input
 								type="email"
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
 								required
-								className="form-control"
+								className="form-control login-input"
 								placeholder="Enter your email"
 							/>
 						</div>
 
-						<div className="mb-3">
+						<div className="login-field">
 							<label className="form-label">Password</label>
 							<input
 								type="password"
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
 								required
-								className="form-control"
+								className="form-control login-input"
 								placeholder="Enter your password"
 							/>
 						</div>
 
-						<div className="mb-3 d-flex justify-content-between align-items-center">
-							<div className="form-check">
+						<div className="login-remember-row">
+							<div className="form-check login-remember-check">
 								<input
 									type="checkbox"
-									className="form-check-input"
-									id="rememberMe"
+									className="form-check-input login-remember-input"
+									id="studentRememberMe"
 									checked={rememberMe}
 									onChange={(e) => setRememberMe(e.target.checked)}
 								/>
-								<label className="form-check-label small" htmlFor="rememberMe">
+								<label className="form-check-label login-remember-label" htmlFor="studentRememberMe">
 									Remember me
 								</label>
 							</div>
-							<Link to="/student/forgot-password" className="text-decoration-none small">
+							<Link to="/student/forgot-password" className="text-decoration-none login-remember-link">
 								Forgot Password?
 							</Link>
 						</div>

@@ -77,7 +77,7 @@ export default function StudentCertificates() {
           <div style={{ marginBottom: '20px' }}>
             <input
               type="text"
-              placeholder="Search by name, Student ID, or verification code..."
+              placeholder="Search by name or Student ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{

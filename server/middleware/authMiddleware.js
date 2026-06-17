@@ -2,7 +2,7 @@ const { verifyToken } = require('../utils/jwt');
 const pool = require('../config/db');
 const sessionService = require('../services/sessionService');
 
-const SESSION_IDLE_TIMEOUT_MS = parseInt(process.env.SESSION_IDLE_TIMEOUT_MS || String(30 * 60 * 1000), 10); // 30 minutes default
+const SESSION_IDLE_TIMEOUT_MS = parseInt(process.env.SESSION_IDLE_TIMEOUT_MS || String(5 * 60 * 1000), 10); // 5 minutes default
 
 async function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;

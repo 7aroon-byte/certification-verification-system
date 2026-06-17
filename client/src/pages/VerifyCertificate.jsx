@@ -44,7 +44,7 @@ export default function VerifyCertificate() {
     const verificationInput = String(inputValue || '').trim()
     if (!verificationInput) {
       setState({ loading: false, error: '', verified: false, data: null })
-      setNotification({ visible: true, type: 'error', text: 'Please enter Full Name, Student ID, or Verification Code' })
+      setNotification({ visible: true, type: 'error', text: 'Please enter Full Name, Student ID, or upload PDF' })
       return
     }
 
@@ -171,7 +171,7 @@ export default function VerifyCertificate() {
                       handleVerifyByInput()
                     }
                   }}
-                  placeholder="Enter graduate’s Full Name, Student ID, Verification Code, or upload PDF"
+                  placeholder="Enter graduate’s Full Name, Student ID, or upload PDF"
                   className="verify-search-input"
                   disabled={Boolean(uploadedFileName)}
                 />

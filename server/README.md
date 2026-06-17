@@ -5,6 +5,7 @@ Create a `.env` file in `server/` with:
 
 - `PORT=5000`
 - `PUBLIC_BASE_URL=http://localhost:5000` # used in QR verification URL
+- `SESSION_IDLE_TIMEOUT_MS=300000` # optional idle session timeout in milliseconds; use 120000-300000 for a 2-5 minute window
 - `ETH_RPC_URL=` # your Ethereum RPC URL (e.g., Alchemy/Infura)
 - `ADMIN_PRIVATE_KEY=` # issuer admin wallet private key for on-chain writes
 - `CONTRACT_ADDRESS=` # deployed CertificateRegistry address
