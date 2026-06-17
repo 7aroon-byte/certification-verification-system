@@ -1320,6 +1320,7 @@ async function forgotPassword(req, res) {
       adminId: admin.id,
       name: admin.name,
       email: admin.email,
+      role: admin.role || 'admin',
       expiresAt: Date.now() + 2 * 60 * 1000, // 2 minutes
       attempts: 0, // Track verification attempts
     };
@@ -1514,7 +1515,7 @@ async function resetPassword(req, res) {
     const pool = require('../config/db');
     const [result] = await pool.execute(
       'UPDATE admin SET password_hash = ? WHERE id = ? AND role = ?',
-      [passwordHash, foundData.adminId, 'admin']
+      [passwordHash, foundData.adminId, foundData.role || 'admin']
     );
 
     if (result.affectedRows === 0) {
