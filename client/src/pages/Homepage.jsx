@@ -57,26 +57,6 @@ export default function Homepage() {
               <li>Digital certificates are considered official institutional documents.</li>
             </ul>
           </div>
-
-          <section className="feature-band" aria-label="IHECVS features">
-            <div className="feature-card">
-              <div className="feature-icon feature-icon-blue" aria-hidden="true">🎓</div>
-              <h3>Secure Records</h3>
-              <p>Academic data is protected with login controls, session expiry, and role-based access.</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon feature-icon-navy" aria-hidden="true">⚙️</div>
-              <h3>Fast Verification</h3>
-              <p>Certificates can be verified instantly with a code, PDF hash, or blockchain-backed record.</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon feature-icon-red" aria-hidden="true">✔</div>
-              <h3>Trusted Issuance</h3>
-              <p>Every issued certificate carries integrity checks that help prevent tampering and fraud.</p>
-            </div>
-          </section>
         </section>
       </main>
     </div>
