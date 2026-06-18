@@ -58,11 +58,14 @@ export default function ContactUs() {
         }}
       >
         <div
-          className="row justify-content-center align-items-stretch"
-          style={{ columnGap: '1.5rem', rowGap: '1.5rem' }}
+          className="d-flex align-items-stretch"
+          style={{
+            gap: '1.5rem',
+            flexWrap: 'nowrap'
+          }}
         >
           {/* Our Location Section */}
-          <div className="col-lg-5">
+          <div style={{ flex: '0 1 38%' }}>
             <div
               className="card shadow-sm border-0 h-100 overflow-hidden"
               style={{ borderRadius: '18px', backgroundColor: '#fff' }}
@@ -148,7 +151,7 @@ export default function ContactUs() {
           </div>
 
           {/* Get in Touch Form Section */}
-          <div className="col-lg-7">
+          <div style={{ flex: '1 1 62%' }}>
             <div
               className="card shadow-sm border-0 h-100 overflow-hidden"
               style={{ borderRadius: '18px', backgroundColor: '#fff' }}
