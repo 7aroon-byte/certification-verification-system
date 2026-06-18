@@ -57,7 +57,10 @@ export default function ContactUs() {
           boxSizing: 'border-box'
         }}
       >
-        <div className="row g-5 justify-content-center align-items-stretch">
+        <div
+          className="row justify-content-center align-items-stretch"
+          style={{ columnGap: '1.5rem', rowGap: '1.5rem' }}
+        >
           {/* Our Location Section */}
           <div className="col-lg-5">
             <div
