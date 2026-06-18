@@ -65,7 +65,7 @@ export default function ContactUs() {
           }}
         >
           {/* Our Location Section */}
-          <div style={{ flex: '0 1 38%' }}>
+          <div style={{ flex: '1 1 0' }}>
             <div
               className="card shadow-sm border-0 h-100 overflow-hidden"
               style={{ borderRadius: '18px', backgroundColor: '#fff' }}
@@ -151,7 +151,7 @@ export default function ContactUs() {
           </div>
 
           {/* Get in Touch Form Section */}
-          <div style={{ flex: '1 1 62%' }}>
+          <div style={{ flex: '1 1 0' }}>
             <div
               className="card shadow-sm border-0 h-100 overflow-hidden"
               style={{ borderRadius: '18px', backgroundColor: '#fff' }}
