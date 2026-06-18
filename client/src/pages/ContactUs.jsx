@@ -52,7 +52,7 @@ export default function ContactUs() {
         style={{
           width: '100%',
           maxWidth: '1360px',
-          margin: '18px auto 0',
+          margin: '36px auto 0',
           padding: '0 18px 40px',
           boxSizing: 'border-box'
         }}
