@@ -48,15 +48,33 @@ export default function ContactUs() {
       <PublicHeader active="contact" />
 
       {/* Main Content */}
-      <div className="container py-5" style={{ marginTop: '18px' }}>
-        <div className="row g-4 justify-content-center">
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '1360px',
+          margin: '18px auto 0',
+          padding: '0 18px 40px',
+          boxSizing: 'border-box'
+        }}
+      >
+        <div className="row g-4 justify-content-center align-items-stretch">
           {/* Our Location Section */}
           <div className="col-lg-5">
-            <div className="card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
-              <div className="card-header text-white py-2" style={{ backgroundColor: '#7f0c14' }}>
-                <h4 className="mb-0" style={{ fontSize: '1.65rem' }}>Our Location</h4>
+            <div
+              className="card shadow-sm border-0 h-100 overflow-hidden"
+              style={{ borderRadius: '18px', backgroundColor: '#fff' }}
+            >
+              <div
+                className="card-header text-white py-2"
+                style={{
+                  backgroundColor: '#7f0c14',
+                  borderTopLeftRadius: '18px',
+                  borderTopRightRadius: '18px'
+                }}
+              >
+                <h4 className="mb-0" style={{ fontSize: '1.5rem', fontWeight: 700 }}>Our Location</h4>
               </div>
-              <div className="card-body p-2">
+              <div className="card-body p-3 p-lg-4">
                 <div className="mb-3">
                   <p className="mb-2 text-center">
                     <strong>No.60 Dr. Sani Yakasai Street</strong>
@@ -128,11 +146,21 @@ export default function ContactUs() {
 
           {/* Get in Touch Form Section */}
           <div className="col-lg-7">
-            <div className="card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
-              <div className="card-header text-white py-2" style={{ backgroundColor: '#7f0c14' }}>
-                <h4 className="mb-0" style={{ fontSize: '1.65rem' }}>Get in Touch</h4>
+            <div
+              className="card shadow-sm border-0 h-100 overflow-hidden"
+              style={{ borderRadius: '18px', backgroundColor: '#fff' }}
+            >
+              <div
+                className="card-header text-white py-2"
+                style={{
+                  backgroundColor: '#7f0c14',
+                  borderTopLeftRadius: '18px',
+                  borderTopRightRadius: '18px'
+                }}
+              >
+                <h4 className="mb-0" style={{ fontSize: '1.5rem', fontWeight: 700 }}>Get in Touch</h4>
               </div>
-              <div className="card-body p-2">
+              <div className="card-body p-3 p-lg-4">
                 {success && (
                   <div className="alert alert-success alert-dismissible fade show" role="alert">
                     <strong>Success!</strong> Thank you for contacting us! We will get back to you soon.
@@ -147,8 +175,8 @@ export default function ContactUs() {
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-2">
+                <form onSubmit={handleSubmit} style={{ maxWidth: '100%' }}>
+                  <div className="mb-3">
                     <label htmlFor="name" className="form-label fw-semibold">
                       Name
                     </label>
@@ -165,7 +193,7 @@ export default function ContactUs() {
                     />
                   </div>
 
-                  <div className="mb-2">
+                  <div className="mb-3">
                     <label htmlFor="email" className="form-label fw-semibold">
                       Email
                     </label>
@@ -182,7 +210,7 @@ export default function ContactUs() {
                     />
                   </div>
 
-                  <div className="mb-2">
+                  <div className="mb-3">
                     <label htmlFor="message" className="form-label fw-semibold">
                       Message
                     </label>
@@ -200,7 +228,7 @@ export default function ContactUs() {
                     ></textarea>
                   </div>
 
-                  <div className="d-flex justify-content-end mt-2">
+                  <div className="d-flex justify-content-end mt-3">
                     <button 
                       type="submit" 
                       className="btn btn-success px-5 py-2 fw-semibold"
