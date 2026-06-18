@@ -57,7 +57,7 @@ export default function ContactUs() {
           boxSizing: 'border-box'
         }}
       >
-        <div className="row g-4 justify-content-center align-items-stretch">
+        <div className="row" style={{ gap: '3rem', justifyContent: 'center', display: 'flex', alignItems: 'stretch' }}>
           {/* Our Location Section */}
           <div className="col-lg-5">
             <div
